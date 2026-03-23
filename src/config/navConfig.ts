@@ -9,6 +9,7 @@ import AnalyticsIcon from '@mui/icons-material/Analytics';
 import StarIcon from '@mui/icons-material/Star';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import InfoIcon from '@mui/icons-material/Info';
 import { SvgIconComponent } from '@mui/icons-material';
 
@@ -55,6 +56,7 @@ export const navItems: NavItem[] = [
     icon: HomeWorkIcon,
     children: [
       { label: 'Kendaraan Dinas', path: '/bmn/kendaraan', icon: DirectionsCarIcon },
+      { label: 'Ruang Rapat', path: '/bmn/ruangan', icon: MeetingRoomIcon },
     ],
   },
   {

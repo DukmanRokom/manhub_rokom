@@ -1,5 +1,5 @@
 // Use ONE URL for everything. This is the latest URL you provided.
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzzouCj0J1NIOtgjuDjN-Vw2_bxZVi_1wlzu9H1jbipcGZQFVEaXfaSgLzQ0nF_l1BMKg/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwwaD4yRWht0rjUOaJSHJEMpZqhK4cDXJmvKA6AzD-vSVhN0U2sNL0h220Yeus_xgH5Bw/exec';
 
 export interface BudgetData {
   id: number;
@@ -27,6 +27,22 @@ export interface VehicleRequest {
   estimasijamkembali: string;
   ruteperjalanandinas: string;
   agendakegiatan: string;
+}
+
+export interface EmployeeData {
+  nama: string;
+  jabatan: string;
+  timkerja: string;
+}
+
+export interface RoomBooking {
+  ruangan: string;
+  namapemohon: string;
+  unitkerja: string;
+  tanggal: string;
+  jammulai: string;
+  jamselesai: string;
+  agenda: string;
 }
 
 /**
@@ -227,6 +243,61 @@ export const googleSheetsService = {
     } catch (err) {
       console.error('Error fetching vehicle requests:', err);
       return [];
+    }
+  },
+
+  async getEmployees(): Promise<EmployeeData[]> {
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${SHEET_URL}?action=getPegawai${cacheBuster}`);
+      const data = await resp.json();
+      return data.map((item: any) => ({
+        nama: item.nama || '',
+        jabatan: item.jabatan || '',
+        timkerja: item.timkerja || '',
+      }));
+    } catch (err) {
+      console.error('Error fetching employees:', err);
+      return [];
+    }
+  },
+
+  async getRoomBookings(): Promise<RoomBooking[]> {
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${SHEET_URL}?action=getRoomBookings${cacheBuster}`);
+      const data = await resp.json();
+      return data.map((item: any) => ({
+        ruangan: item.ruangan || '',
+        namapemohon: item.namapemohon || '',
+        unitkerja: item.unitkerja || '',
+        tanggal: item.tanggal || '',
+        jammulai: item.jammulai || '',
+        jamselesai: item.jamselesai || '',
+        agenda: item.agenda || '',
+      }));
+    } catch (err) {
+      console.error('Error fetching room bookings:', err);
+      return [];
+    }
+  },
+
+  async submitRoomBooking(item: RoomBooking): Promise<void> {
+    try {
+      await fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'addRoomBooking',
+          ...item
+        }),
+      });
+    } catch (err) {
+      console.error('Error submitting room booking:', err);
+      throw err;
     }
   }
 };

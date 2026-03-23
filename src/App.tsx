@@ -10,6 +10,8 @@ import RekapAbsensiPage from './pages/RekapAbsensiPage';
 import LaporanBulananPage from './pages/LaporanBulananPage';
 import EotmPage from './pages/EotmPage';
 import KendaraanDinasPage from './pages/KendaraanDinasPage';
+import DataPegawaiPage from './pages/DataPegawaiPage';
+import RuangRapatPage from './pages/RuangRapatPage';
 import DiagnosticPage from './pages/DiagnosticPage';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -27,10 +29,11 @@ function App() {
               <Route path="keuangan/realisasi" element={<RealisasiAnggaranPage />} />
               <Route path="keuangan/reimburse" element={<PlaceholderPage title="Pengajuan Reimbursement" desc="Proses pengajuan klaim pengeluaran dinas dan operasional kantor." />} />
               <Route path="monev/laporan-bulanan" element={<LaporanBulananPage />} />
-              <Route path="sdm/pegawai" element={<PlaceholderPage title="Data Pegawai" desc="Direktori pegawai lengkap dengan riwayat jabatan dan informasi kontak." />} />
+              <Route path="sdm/pegawai" element={<DataPegawaiPage />} />
               <Route path="sdm/kinerja" element={<PlaceholderPage title="Laporan Kinerja" desc="Dashboard SKP dan penilaian kinerja pegawai berbasis platform digital." />} />
               <Route path="sdm/eotm" element={<EotmPage />} />
               <Route path="bmn/kendaraan" element={<KendaraanDinasPage />} />
+              <Route path="bmn/ruangan" element={<RuangRapatPage />} />
               <Route path="diagnostic" element={<DiagnosticPage />} />
               <Route path="laporan" element={<PlaceholderPage title="Laporan" desc="Kumpulan laporan komprehensif lintas divisi dan periode waktu." />} />
               <Route path="pengaturan" element={<PlaceholderPage title="Pengaturan" desc="Konfigurasi akun, notifikasi, dan preferensi aplikasi." />} />
