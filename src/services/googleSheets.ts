@@ -1,5 +1,5 @@
 // Use ONE URL for everything. This is the latest URL you provided.
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwvWPoGrVobFAm_B1VFBJisFeRXaCdP3u4iLabQwGDYPIokvYXyPruX444b_uEuQsp5Dw/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzzouCj0J1NIOtgjuDjN-Vw2_bxZVi_1wlzu9H1jbipcGZQFVEaXfaSgLzQ0nF_l1BMKg/exec';
 
 export interface BudgetData {
   id: number;
@@ -14,6 +14,19 @@ export interface EotmData {
   periode: string;
   nama: string;
   jabatan: string;
+}
+
+export interface VehicleRequest {
+  timestamp?: string;
+  namapemohon: string;
+  unitkerja: string;
+  kendaraan: string;
+  tanggalpeminjaman: string;
+  tanggalkembali: string;
+  jammulaipeminjaman: string;
+  estimasijamkembali: string;
+  ruteperjalanandinas: string;
+  agendakegiatan: string;
 }
 
 /**
@@ -179,5 +192,41 @@ export const googleSheetsService = {
         id: id
       }),
     });
+  },
+
+  async submitVehicleRequest(item: VehicleRequest): Promise<void> {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'addVehicleRequest',
+        ...item
+      }),
+    });
+  },
+
+  async getVehicleRequests(): Promise<VehicleRequest[]> {
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${SHEET_URL}?action=getVehicleRequests${cacheBuster}`);
+      const data = await resp.json();
+      return data.map((item: any) => ({
+        namapemohon: item.namapemohon || '',
+        unitkerja: item.unitkerja || '',
+        kendaraan: item.kendaraan || '',
+        tanggalpeminjaman: item.tanggalpeminjaman || '',
+        tanggalkembali: item.tanggalkembali || '',
+        jammulaipeminjaman: item.jammulaipeminjaman || '',
+        estimasijamkembali: item.estimasijamkembali || '',
+        ruteperjalanandinas: item.ruteperjalanandinas || '',
+        agendakegiatan: item.agendakegiatan || '',
+      }));
+    } catch (err) {
+      console.error('Error fetching vehicle requests:', err);
+      return [];
+    }
   }
 };
