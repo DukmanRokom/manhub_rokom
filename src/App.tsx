@@ -11,6 +11,8 @@ import LaporanBulananPage from './pages/LaporanBulananPage';
 import EotmPage from './pages/EotmPage';
 import KendaraanDinasPage from './pages/KendaraanDinasPage';
 import DataPegawaiPage from './pages/DataPegawaiPage';
+import IkiPage from './pages/IkiPage';
+import AtkPage from './pages/AtkPage';
 import RuangRapatPage from './pages/RuangRapatPage';
 import DiagnosticPage from './pages/DiagnosticPage';
 import { AuthProvider } from './contexts/AuthContext';
@@ -30,12 +32,13 @@ function App() {
               <Route path="keuangan/reimburse" element={<PlaceholderPage title="Pengajuan Reimbursement" desc="Proses pengajuan klaim pengeluaran dinas dan operasional kantor." />} />
               <Route path="monev/laporan-bulanan" element={<LaporanBulananPage />} />
               <Route path="sdm/pegawai" element={<DataPegawaiPage />} />
-              <Route path="sdm/kinerja" element={<PlaceholderPage title="Laporan Kinerja" desc="Dashboard SKP dan penilaian kinerja pegawai berbasis platform digital." />} />
+              <Route path="sdm/iki" element={<IkiPage />} />
+              <Route path="monev/kinerja" element={<PlaceholderPage title="Laporan Kinerja" desc="Dashboard SKP dan penilaian kinerja pegawai berbasis platform digital." />} />
               <Route path="sdm/eotm" element={<EotmPage />} />
               <Route path="bmn/kendaraan" element={<KendaraanDinasPage />} />
               <Route path="bmn/ruangan" element={<RuangRapatPage />} />
+              <Route path="bmn/atk" element={<AtkPage />} />
               <Route path="diagnostic" element={<DiagnosticPage />} />
-              <Route path="laporan" element={<PlaceholderPage title="Laporan" desc="Kumpulan laporan komprehensif lintas divisi dan periode waktu." />} />
               <Route path="pengaturan" element={<PlaceholderPage title="Pengaturan" desc="Konfigurasi akun, notifikasi, dan preferensi aplikasi." />} />
               <Route path="bantuan" element={<PlaceholderPage title="Pusat Bantuan" desc="Panduan penggunaan, FAQ, dan kontak helpdesk teknis." />} />
               <Route path="about" element={<PlaceholderPage title="About Us" desc="Profil Tim Dukungan Manajemen sebagai pengurus dan pemilik web Manajemen Support Hub (MANHUB)." />} />

@@ -1,5 +1,5 @@
 // Use ONE URL for everything. This is the latest URL you provided.
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwwaD4yRWht0rjUOaJSHJEMpZqhK4cDXJmvKA6AzD-vSVhN0U2sNL0h220Yeus_xgH5Bw/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbytXlG2pc2_Se3Pux9xM7P_vN43x12w-VgOk0S1Lh_nB3nDtNZbJvNs6wxwD14tkwgfNw/exec';
 
 export interface BudgetData {
   id: number;
@@ -43,6 +43,32 @@ export interface RoomBooking {
   jammulai: string;
   jamselesai: string;
   agenda: string;
+}
+
+export interface AtkMasterData {
+  no: number;
+  kodebarang: string;
+  namabarang: string;
+  satuan: string;
+}
+
+export interface AtkRequest {
+  timestamp?: string;
+  namapemohon: string;
+  unitkerja: string;
+  namabarang: string;
+  kodebarang: string;
+  jumlah: number;
+  satuan: string;
+  keterangan: string;
+  items?: AtkRequestItem[]; // Added for bulk support
+}
+
+export interface AtkRequestItem {
+  namabarang: string;
+  kodebarang: string;
+  jumlah: number;
+  satuan: string;
 }
 
 /**
@@ -143,7 +169,7 @@ export const googleSheetsService = {
         return data
           .filter((item: any) => item.nama || item.Nama) // Filter out empty rows
           .map((item: any) => {
-            // Apps Script v3 currently lowercases all headers
+            // Apps Script v3 currently lowercases all headers, so check both cases
             const rawUrl = (item.fotoUrl || item.fotourl || '').toString().trim();
             const rawPeriode = (item.periode || item.Periode || '').toString().trim();
             const rawNama = (item.nama || item.Nama || '').toString().trim();
@@ -298,6 +324,63 @@ export const googleSheetsService = {
     } catch (err) {
       console.error('Error submitting room booking:', err);
       throw err;
+    }
+  },
+
+  async getAtkMaster(): Promise<AtkMasterData[]> {
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${SHEET_URL}?action=getAtkMaster${cacheBuster}`);
+      const data = await resp.json();
+      return data.map((item: any) => ({
+        no: Number(item.no || item['no.'] || 0),
+        kodebarang: (item.kodebarang || '').toString().trim(),
+        namabarang: (item.namabarang || '').toString().trim(),
+        satuan: (item.satuan || '').toString().trim(),
+      }));
+    } catch (err) {
+      console.error('Error fetching ATK master:', err);
+      return [];
+    }
+  },
+
+  async submitAtkRequest(item: AtkRequest): Promise<void> {
+    try {
+      await fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'addAtkRequest',
+          ...item
+        }),
+      });
+    } catch (err) {
+      console.error('Error submitting ATK request:', err);
+      throw err;
+    }
+  },
+
+  async getAtkRequests(): Promise<AtkRequest[]> {
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${SHEET_URL}?action=getAtkRequests${cacheBuster}`);
+      const data = await resp.json();
+      return data.map((item: any) => ({
+        timestamp: item.timestamp || '',
+        namapemohon: item.namapemohon || '',
+        unitkerja: item.unitkerja || '',
+        namabarang: item.namabarang || '',
+        kodebarang: item.kodebarang || '',
+        jumlah: Number(item.jumlah || 0),
+        satuan: item.satuan || '',
+        keterangan: item.keterangan || '',
+      }));
+    } catch (err) {
+      console.error('Error fetching ATK requests:', err);
+      return [];
     }
   }
 };

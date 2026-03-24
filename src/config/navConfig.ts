@@ -10,6 +10,7 @@ import StarIcon from '@mui/icons-material/Star';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import InfoIcon from '@mui/icons-material/Info';
 import { SvgIconComponent } from '@mui/icons-material';
 
@@ -27,13 +28,22 @@ export const navItems: NavItem[] = [
     icon: DashboardIcon,
   },
   {
+    label: 'BMN & Kerumahtanggaan',
+    icon: HomeWorkIcon,
+    children: [
+      { label: 'Kendaraan Dinas', path: '/bmn/kendaraan', icon: DirectionsCarIcon },
+      { label: 'Ruang Rapat', path: '/bmn/ruangan', icon: MeetingRoomIcon },
+      { label: 'Permintaan ATK', path: '/bmn/atk', icon: AssignmentIcon },
+    ],
+  },
+  {
     label: 'Kepegawaian',
     icon: BadgeIcon,
     children: [
       { label: 'Rekap Absensi', path: '/kehadiran/rekap', icon: AccessTimeIcon },
       { label: 'Pengajuan Lembur', path: '/kehadiran/lembur', icon: AssignmentIcon },
       { label: 'Data Pegawai', path: '/sdm/pegawai', icon: BadgeIcon },
-      { label: 'Laporan Kinerja', path: '/sdm/kinerja', icon: SummarizeIcon },
+      { label: 'IKI', path: '/sdm/iki', icon: TrendingUpIcon },
       { label: 'Employee of the Month', path: '/sdm/eotm', icon: StarIcon },
     ],
   },
@@ -49,20 +59,8 @@ export const navItems: NavItem[] = [
     icon: AnalyticsIcon,
     children: [
       { label: 'Laporan Bulanan', path: '/monev/laporan-bulanan', icon: SummarizeIcon },
+      { label: 'Laporan Kinerja', path: '/monev/kinerja', icon: SummarizeIcon },
     ],
-  },
-  {
-    label: 'BMN & Kerumahtanggaan',
-    icon: HomeWorkIcon,
-    children: [
-      { label: 'Kendaraan Dinas', path: '/bmn/kendaraan', icon: DirectionsCarIcon },
-      { label: 'Ruang Rapat', path: '/bmn/ruangan', icon: MeetingRoomIcon },
-    ],
-  },
-  {
-    label: 'Laporan',
-    path: '/laporan',
-    icon: BarChartIcon,
   },
   {
     label: 'About',

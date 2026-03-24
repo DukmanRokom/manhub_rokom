@@ -184,7 +184,7 @@ export default function RuangRapatPage() {
       {/* Room Status Summary Cards */}
       <Grid container spacing={3} sx={{ mb: 6 }}>
         {RUANGAN_LIST.map((room) => {
-          const currentTime = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false });
+          const currentTime = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false });
           
           const isBookedNow = todayBookings.some(b => {
              const roomNameMatch = b.ruangan.toLowerCase().includes(room.id) || 
