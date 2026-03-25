@@ -187,8 +187,7 @@ export default function RuangRapatPage() {
           const currentTime = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false });
           
           const isBookedNow = todayBookings.some(b => {
-             const roomNameMatch = b.ruangan.toLowerCase().includes(room.id) || 
-                                b.ruangan.toLowerCase().includes(room.name.toLowerCase().split(' ')[1]);
+             const roomNameMatch = b.ruangan === room.name;
              if (!roomNameMatch) return false;
              
              // Check if current time is between start and end

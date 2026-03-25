@@ -22,6 +22,7 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SyncIcon from '@mui/icons-material/Sync';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import {
   BarChart,
   Bar,
@@ -106,13 +107,43 @@ export default function RealisasiAnggaranPage() {
         </Box>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button 
+            variant="contained" 
+            size="small" 
+            startIcon={<OpenInNewIcon />} 
+            href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0P0aA56EMSopUoTnLY6y_gzcZoH96yw6ZBIO00-dqLSdUOjUiZpPkFiUj8ZGbYQ/pubhtml"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ 
+              backgroundColor: '#00b8ac', 
+              '&:hover': { backgroundColor: '#008e84' },
+              fontWeight: 700,
+              borderRadius: 2,
+              textTransform: 'none',
+              minWidth: { xs: '40px', sm: 'auto' },
+              px: { xs: 1, sm: 2 }
+            }}
+          >
+            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+              Detail Spreadsheet
+            </Box>
+          </Button>
+          <Button 
             variant="outlined" 
             size="small" 
             startIcon={<SyncIcon />} 
             onClick={loadData}
             disabled={loading}
+            sx={{ 
+              borderRadius: 2, 
+              textTransform: 'none', 
+              fontWeight: 600,
+              minWidth: { xs: '40px', sm: 'auto' },
+              px: { xs: 1, sm: 2 }
+            }}
           >
-            Refresh Data
+            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+              Refresh Data
+            </Box>
           </Button>
         </Box>
       </Box>
