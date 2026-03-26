@@ -12,6 +12,7 @@ import EotmPage from './pages/EotmPage';
 import KendaraanDinasPage from './pages/KendaraanDinasPage';
 import DataPegawaiPage from './pages/DataPegawaiPage';
 import IkiPage from './pages/IkiPage';
+import CapaianOutputPage from './pages/CapaianOutputPage';
 import AtkPage from './pages/AtkPage';
 import RuangRapatPage from './pages/RuangRapatPage';
 import DiagnosticPage from './pages/DiagnosticPage';
@@ -31,6 +32,7 @@ function App() {
               <Route path="keuangan/realisasi" element={<RealisasiAnggaranPage />} />
               <Route path="keuangan/reimburse" element={<PlaceholderPage title="Pengajuan Reimbursement" desc="Proses pengajuan klaim pengeluaran dinas dan operasional kantor." />} />
               <Route path="monev/laporan-bulanan" element={<LaporanBulananPage />} />
+              <Route path="monev/capaian-output" element={<CapaianOutputPage />} />
               <Route path="sdm/pegawai" element={<DataPegawaiPage />} />
               <Route path="sdm/iki" element={<IkiPage />} />
               <Route path="monev/kinerja" element={<PlaceholderPage title="Laporan Kinerja" desc="Dashboard SKP dan penilaian kinerja pegawai berbasis platform digital." />} />

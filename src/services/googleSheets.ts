@@ -1,5 +1,6 @@
 // Use ONE URL for everything. This is the latest URL you provided.
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbytXlG2pc2_Se3Pux9xM7P_vN43x12w-VgOk0S1Lh_nB3nDtNZbJvNs6wxwD14tkwgfNw/exec';
+const CAPUT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzy6UMw3II2Rarcr1-Dn5FSA90sSwS3mY-_DUC0wLjykO8wHsCouNmEewMw2vo2JgZkPQ/exec';
 
 export interface BudgetData {
   id: number;
@@ -69,6 +70,16 @@ export interface AtkRequestItem {
   kodebarang: string;
   jumlah: number;
   satuan: string;
+}
+
+export interface CapaianOutputData {
+  kode: string;
+  komponen: string;
+  target: string;
+  timKerja: string;
+  keterangan: string;
+  realisasi: { [key: string]: string | undefined };
+  isHeader?: boolean;
 }
 
 /**
@@ -380,6 +391,40 @@ export const googleSheetsService = {
       }));
     } catch (err) {
       console.error('Error fetching ATK requests:', err);
+      return [];
+    }
+  },
+
+  async fetchCapaianOutput(): Promise<CapaianOutputData[]> {
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${CAPUT_SHEET_URL}?action=getCapaianOutput${cacheBuster}`);
+      const data = await resp.json();
+      
+      return data.map((item: any) => ({
+        kode: item.kode || '',
+        komponen: item.komponen || '',
+        target: item.target || '',
+        timKerja: item.timkerja || '',
+        keterangan: item.keterangan || '',
+        realisasi: {
+          jan: item.januari,
+          feb: item.februari,
+          mar: item.maret,
+          apr: item.april,
+          mei: item.mei,
+          jun: item.juni,
+          jul: item.juli,
+          agu: item.agustus,
+          sep: item.september,
+          okt: item.oktober,
+          nov: item.november,
+          des: item.desember,
+        },
+        isHeader: item.isheader === true || item.isHeader === true,
+      }));
+    } catch (err) {
+      console.error('Error fetching Capaian Output data:', err);
       return [];
     }
   }
