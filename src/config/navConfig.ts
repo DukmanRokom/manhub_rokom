@@ -11,7 +11,7 @@ import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import InfoIcon from '@mui/icons-material/Info';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { SvgIconComponent } from '@mui/icons-material';
 
 export interface NavItem {
@@ -43,7 +43,7 @@ export const navItems: NavItem[] = [
       { label: 'Rekap Absensi', path: '/kehadiran/rekap', icon: AccessTimeIcon },
       { label: 'Pengajuan Lembur', path: '/kehadiran/lembur', icon: AssignmentIcon },
       { label: 'Data Pegawai', path: '/sdm/pegawai', icon: BadgeIcon },
-      { label: 'IKI', path: '/sdm/iki', icon: TrendingUpIcon },
+      { label: 'Katalog Indikator Kinerja', path: '/sdm/katalog-iki', icon: MenuBookIcon },
       { label: 'Employee of the Month', path: '/sdm/eotm', icon: StarIcon },
     ],
   },
@@ -60,12 +60,6 @@ export const navItems: NavItem[] = [
     children: [
       { label: 'Capaian Output', path: '/monev/capaian-output', icon: TrendingUpIcon },
       { label: 'Laporan Bulanan', path: '/monev/laporan-bulanan', icon: SummarizeIcon },
-      { label: 'Laporan Kinerja', path: '/monev/kinerja', icon: SummarizeIcon },
     ],
-  },
-  {
-    label: 'About',
-    path: '/about',
-    icon: InfoIcon,
   },
 ];

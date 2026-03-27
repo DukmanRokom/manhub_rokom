@@ -11,8 +11,8 @@ import LaporanBulananPage from './pages/LaporanBulananPage';
 import EotmPage from './pages/EotmPage';
 import KendaraanDinasPage from './pages/KendaraanDinasPage';
 import DataPegawaiPage from './pages/DataPegawaiPage';
-import IkiPage from './pages/IkiPage';
 import CapaianOutputPage from './pages/CapaianOutputPage';
+import KatalogIkiPage from './pages/KatalogIkiPage';
 import AtkPage from './pages/AtkPage';
 import RuangRapatPage from './pages/RuangRapatPage';
 import DiagnosticPage from './pages/DiagnosticPage';
@@ -34,8 +34,7 @@ function App() {
               <Route path="monev/laporan-bulanan" element={<LaporanBulananPage />} />
               <Route path="monev/capaian-output" element={<CapaianOutputPage />} />
               <Route path="sdm/pegawai" element={<DataPegawaiPage />} />
-              <Route path="sdm/iki" element={<IkiPage />} />
-              <Route path="monev/kinerja" element={<PlaceholderPage title="Laporan Kinerja" desc="Dashboard SKP dan penilaian kinerja pegawai berbasis platform digital." />} />
+              <Route path="sdm/katalog-iki" element={<KatalogIkiPage />} />
               <Route path="sdm/eotm" element={<EotmPage />} />
               <Route path="bmn/kendaraan" element={<KendaraanDinasPage />} />
               <Route path="bmn/ruangan" element={<RuangRapatPage />} />
@@ -43,7 +42,6 @@ function App() {
               <Route path="diagnostic" element={<DiagnosticPage />} />
               <Route path="pengaturan" element={<PlaceholderPage title="Pengaturan" desc="Konfigurasi akun, notifikasi, dan preferensi aplikasi." />} />
               <Route path="bantuan" element={<PlaceholderPage title="Pusat Bantuan" desc="Panduan penggunaan, FAQ, dan kontak helpdesk teknis." />} />
-              <Route path="about" element={<PlaceholderPage title="About Us" desc="Profil Tim Dukungan Manajemen sebagai pengurus dan pemilik web Manajemen Support Hub (MANHUB)." />} />
               <Route path="*" element={<PlaceholderPage title="Halaman Tidak Ditemukan" desc="URL yang Anda akses tidak tersedia. Silakan kembali ke dashboard." />} />
             </Route>
           </Routes>
