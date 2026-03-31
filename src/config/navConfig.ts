@@ -60,6 +60,7 @@ export const navItems: NavItem[] = [
     children: [
       { label: 'Capaian Output', path: '/monev/capaian-output', icon: TrendingUpIcon },
       { label: 'Laporan Bulanan', path: '/monev/laporan-bulanan', icon: SummarizeIcon },
+      { label: 'LAKIP', path: '/monev/lakip', icon: AssignmentIcon },
     ],
   },
 ];

@@ -1,5 +1,5 @@
 // Use ONE URL for everything. This is the latest URL you provided.
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbytXlG2pc2_Se3Pux9xM7P_vN43x12w-VgOk0S1Lh_nB3nDtNZbJvNs6wxwD14tkwgfNw/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxOoGGAyG2jqzqC98QE2TA3tsHtW5pK08-mzZWTf392pE4H5mAUUgknKKunwCkhM8vSMQ/exec';
 const CAPUT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzy6UMw3II2Rarcr1-Dn5FSA90sSwS3mY-_DUC0wLjykO8wHsCouNmEewMw2vo2JgZkPQ/exec';
 
 export interface BudgetData {
@@ -82,6 +82,13 @@ export interface CapaianOutputData {
   isHeader?: boolean;
 }
 
+export interface LakipData {
+  id: number;
+  tahun: string;
+  nama: string;
+  url: string;
+}
+
 /**
  * Converts a standard Google Drive sharing link to a direct download/view link
  * so it can be used in <img> tags.
@@ -105,9 +112,9 @@ export const convertDriveLink = (url: string): string => {
     }
     
     if (fileId) {
-      // The 'thumbnail' endpoint is the most reliable for embedding Drive images 
-      // without hitting 'file too large' or 'virus scan' interstitials.
-      return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+      // sz=w600 is for width, sz=s1000 is for max dimension. 
+      // Sometimes sz=w600 is more reliable for quick loading.
+      return `https://drive.google.com/thumbnail?id=${fileId}&sz=w600`;
     }
   }
   return url;
@@ -427,5 +434,64 @@ export const googleSheetsService = {
       console.error('Error fetching Capaian Output data:', err);
       return [];
     }
+  },
+
+  async fetchLakipData(): Promise<LakipData[]> {
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${SHEET_URL}?action=getLakip${cacheBuster}`);
+      const data = await resp.json();
+      return data.map((item: any) => ({
+        id: Number(item.id || item.ID || 0),
+        tahun: (item.tahun || item.Tahun || '').toString().trim(),
+        nama: (item.nama || item.Nama || '').toString().trim(),
+        url: (item.url || item.URL || '').toString().trim(),
+      })).filter((item: any) => item.nama !== '');
+    } catch (err) {
+      console.error('Error fetching Lakip data:', err);
+      return [];
+    }
+  },
+
+  async addLakipRow(item: Omit<LakipData, 'id'>): Promise<void> {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'addLakip',
+        ...item
+      }),
+    });
+  },
+
+  async updateLakipRow(item: LakipData): Promise<void> {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'updateLakip',
+        ...item
+      }),
+    });
+  },
+
+  async deleteLakipRow(id: number): Promise<void> {
+    await fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'deleteLakip',
+        id: id
+      }),
+    });
   }
 };

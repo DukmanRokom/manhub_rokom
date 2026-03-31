@@ -15,6 +15,7 @@ import CapaianOutputPage from './pages/CapaianOutputPage';
 import KatalogIkiPage from './pages/KatalogIkiPage';
 import AtkPage from './pages/AtkPage';
 import RuangRapatPage from './pages/RuangRapatPage';
+import LakipPage from './pages/LakipPage';
 import DiagnosticPage from './pages/DiagnosticPage';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -33,6 +34,7 @@ function App() {
               <Route path="keuangan/reimburse" element={<PlaceholderPage title="Pengajuan Reimbursement" desc="Proses pengajuan klaim pengeluaran dinas dan operasional kantor." />} />
               <Route path="monev/laporan-bulanan" element={<LaporanBulananPage />} />
               <Route path="monev/capaian-output" element={<CapaianOutputPage />} />
+              <Route path="monev/lakip" element={<LakipPage />} />
               <Route path="sdm/pegawai" element={<DataPegawaiPage />} />
               <Route path="sdm/katalog-iki" element={<KatalogIkiPage />} />
               <Route path="sdm/eotm" element={<EotmPage />} />
