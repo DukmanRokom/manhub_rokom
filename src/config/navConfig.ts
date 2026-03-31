@@ -64,4 +64,11 @@ export const navItems: NavItem[] = [
       { label: 'LAKIP', path: '/monev/lakip', icon: AssignmentIcon },
     ],
   },
+  {
+    label: 'Perencanaan Anggaran',
+    icon: TrendingUpIcon,
+    children: [
+      { label: 'Usulan Perencanaan', path: '/perencanaan/usulan', icon: AssignmentIcon },
+    ],
+  },
 ];

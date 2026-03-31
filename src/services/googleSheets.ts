@@ -1,6 +1,13 @@
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycby5FEyANXDee3_Rxod089GG3DWgRV5OL2gdv5CUqm7GU8zVDwPujX1Kbqg0myFP9JsaUA/exec';
 const CAPUT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzy6UMw3II2Rarcr1-Dn5FSA90sSwS3mY-_DUC0wLjykO8wHsCouNmEewMw2vo2JgZkPQ/exec';
 const SPJ_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwOFkrFOPEOQEg4krZJv30GG7T7HA-5C4fa7h23iTkWFn_OBrIKoVpc0mlnz7p70loj/exec';
+const PERENCANAAN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw9y_qL1QshwVaH9SEHbA1tUwvGWP5fYXbxGmLnLnCX9QS2iZ4XrDwlHEn_zr4oQsIB/exec';
+
+export interface PerencanaanData {
+  id: number;
+  tahun: string;
+  url: string;
+}
 
 export interface BudgetData {
   id: number;
@@ -531,6 +538,31 @@ export const googleSheetsService = {
       }
     } catch (err) {
       console.error('Network error fetching SPJ data:', err);
+      return [];
+    }
+  },
+
+  async fetchPerencanaanData(): Promise<PerencanaanData[]> {
+    if (!PERENCANAAN_SHEET_URL) return [];
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${PERENCANAAN_SHEET_URL}?action=getPerencanaan${cacheBuster}`);
+      const text = await resp.text();
+      
+      try {
+        const data = JSON.parse(text);
+        if (!Array.isArray(data)) return [];
+        return data.map((item: any) => ({
+          id: Number(item.id) || 0,
+          tahun: (item.tahun || '').toString(),
+          url: (item.url || '').toString(),
+        }));
+      } catch (e) {
+        console.error('Invalid JSON from Perencanaan endpoint');
+        return [];
+      }
+    } catch (err) {
+      console.error('Error fetching Perencanaan data:', err);
       return [];
     }
   }
