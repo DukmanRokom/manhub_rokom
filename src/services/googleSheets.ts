@@ -1,5 +1,5 @@
 // Use ONE URL for everything. This is the latest URL you provided.
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxOoGGAyG2jqzqC98QE2TA3tsHtW5pK08-mzZWTf392pE4H5mAUUgknKKunwCkhM8vSMQ/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbykrlaPAxSU84UM93czvc86iViWi2xIutPFJEgXxEQfoYhzcNaUFPD9x6q5AcmRBbSrRw/exec';
 const CAPUT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzy6UMw3II2Rarcr1-Dn5FSA90sSwS3mY-_DUC0wLjykO8wHsCouNmEewMw2vo2JgZkPQ/exec';
 
 export interface BudgetData {
@@ -98,7 +98,7 @@ export const convertDriveLink = (url: string): string => {
   const cleanUrl = url.trim();
   if (cleanUrl.includes('drive.google.com')) {
     let fileId = '';
-    
+
     // Pattern 1: /file/d/[ID]/view
     const matchD = cleanUrl.match(/\/d\/([^/?]+)/);
     if (matchD && matchD[1]) {
@@ -110,7 +110,7 @@ export const convertDriveLink = (url: string): string => {
         fileId = matchId[1];
       }
     }
-    
+
     if (fileId) {
       // sz=w600 is for width, sz=s1000 is for max dimension. 
       // Sometimes sz=w600 is more reliable for quick loading.
@@ -177,7 +177,7 @@ export const googleSheetsService = {
       const cacheBuster = `&t=${Date.now()}`;
       const resp = await fetch(`${SHEET_URL}?action=getEotm${cacheBuster}`);
       const text = await resp.text();
-      
+
       try {
         const data = JSON.parse(text);
         if (data.error) {
@@ -196,7 +196,7 @@ export const googleSheetsService = {
 
             return {
               id: Number(rawId),
-              fotoUrl: rawUrl, 
+              fotoUrl: rawUrl,
               periode: rawPeriode,
               nama: rawNama,
               jabatan: rawJabatan,
@@ -407,7 +407,7 @@ export const googleSheetsService = {
       const cacheBuster = `&t=${Date.now()}`;
       const resp = await fetch(`${CAPUT_SHEET_URL}?action=getCapaianOutput${cacheBuster}`);
       const data = await resp.json();
-      
+
       return data.map((item: any) => ({
         kode: item.kode || '',
         komponen: item.komponen || '',

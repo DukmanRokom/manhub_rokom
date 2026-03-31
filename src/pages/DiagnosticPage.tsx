@@ -14,7 +14,7 @@ import {
 import { convertDriveLink } from '../services/googleSheets';
 
 export default function DiagnosticPage() {
-  const [url, setUrl] = useState('https://script.google.com/macros/s/AKfycbwvWPoGrVobFAm_B1VFBJisFeRXaCdP3u4iLabQwGDYPIokvYXyPruX444b_uEuQsp5Dw/exec');
+  const [url, setUrl] = useState('https://script.google.com/macros/s/AKfycbwfCmI6l5iNIYGew6VkzLwRDUDvPdVBQuY7zebXr8h_xsMSeRTupK7kRC-kuWY0mUixQg/exec');
   const [testImgUrl, setTestImgUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
@@ -87,7 +87,7 @@ export default function DiagnosticPage() {
             disabled={loading}
             color="secondary"
           >
-            List Available Sheets
+            Check Script Version & Sheets
           </Button>
         </Box>
       </Paper>
