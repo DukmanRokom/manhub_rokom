@@ -130,13 +130,20 @@ export default function RuangRapatPage() {
 
   const todayStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
-  // Custom date comparison helper
+  // Helper to convert HH:mm or HH.mm to total minutes for safe comparison
+  const timeToMinutes = (timeStr: string) => {
+    if (!timeStr) return 0;
+    const cleanTime = timeStr.replace('.', ':');
+    const [hours, minutes] = cleanTime.split(':').map(Number);
+    return (hours || 0) * 60 + (minutes || 0);
+  };
+
   const isToday = (dateStr: string) => {
     if (!dateStr) return false;
-    // Handle YYYY-MM-DD or DD/MM/YYYY
-    if (dateStr.includes('-')) return dateStr === todayStr;
-    if (dateStr.includes('/')) {
-      const parts = dateStr.split('/');
+    const cleanDate = dateStr.split('T')[0]; // Handle possible ISO strings
+    if (cleanDate.includes('-')) return cleanDate === todayStr;
+    if (cleanDate.includes('/')) {
+      const parts = cleanDate.split('/');
       const formatted = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
       return formatted === todayStr;
     }
@@ -184,14 +191,19 @@ export default function RuangRapatPage() {
       {/* Room Status Summary Cards */}
       <Grid container spacing={3} sx={{ mb: 6 }}>
         {RUANGAN_LIST.map((room) => {
-          const currentTime = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false });
+          // Robust hour/minute extraction regardless of browser locale
+          const nowHours = now.getHours();
+          const nowMinutes = now.getMinutes();
+          const currentTotalMinutes = nowHours * 60 + nowMinutes;
           
           const isBookedNow = todayBookings.some(b => {
-             const roomNameMatch = b.ruangan === room.name;
-             if (!roomNameMatch) return false;
+             if (b.ruangan !== room.name) return false;
              
-             // Check if current time is between start and end
-             return currentTime >= b.jammulai && currentTime <= b.jamselesai;
+             const startMinutes = timeToMinutes(b.jammulai);
+             const endMinutes = timeToMinutes(b.jamselesai);
+             
+             // Check if current time is within range
+             return currentTotalMinutes >= startMinutes && currentTotalMinutes < endMinutes;
           });
 
           return (
