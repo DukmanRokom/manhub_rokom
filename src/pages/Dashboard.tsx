@@ -47,6 +47,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { formatCurrency } from '../utils/format';
+import bannerPeople from '../assets/banner_people.png';
 
 const serviceCards = [
   {
@@ -176,7 +177,7 @@ export default function Dashboard() {
       <Box
         sx={{
           mb: 4,
-          p: { xs: 3, md: 4 },
+          p: { xs: 3, md: 5 },
           borderRadius: 3,
           background: 'linear-gradient(135deg, #006b63 0%, #00b8ac 40%, #00a89d 70%, #00cfc2 100%)',
           position: 'relative',
@@ -206,80 +207,102 @@ export default function Dashboard() {
             background: 'rgba(255,255,255,0.05)',
           }}
         />
-        <Box sx={{ position: 'relative', zIndex: 1 }}>
-          <Chip
-            label="Portal Layanan Aktif"
-            size="small"
-            sx={{
-              mb: 1.5,
-              background: 'rgba(255,255,255,0.15)',
-              color: '#fff',
-              fontWeight: 600,
-              fontSize: '0.7rem',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255,255,255,0.25)',
-            }}
-          />
-          <Typography
-            variant="h4"
-            sx={{
-              color: '#fff',
-              fontWeight: 800,
-              mb: 1,
-              lineHeight: 1.2,
-              fontSize: { xs: '1.5rem', md: '2rem' },
-            }}
-          >
-            Selamat Datang di MANHUB 👋
-          </Typography>
-          <Typography
-            sx={{
-              color: 'rgba(255,255,255,0.85)',
-              fontSize: { xs: '0.85rem', md: '0.95rem' },
-              mb: 3,
-              maxWidth: 700,
-              lineHeight: 1.7,
-            }}
-          >
-            Platform terpadu manajemen administrasi dan layanan perkantoran Tim Kerja Dukungan Manajemen Biro Komunikasi dan Informasi Publik, Kementerian Kesehatan RI.
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            <Button
-              variant="contained"
-              startIcon={<AccessTimeIcon />}
-              onClick={() => navigate('/kehadiran/rekap')}
+        <Grid container spacing={4} alignItems="center" sx={{ position: 'relative', zIndex: 1 }}>
+          <Grid item xs={12} md={5}>
+            <Chip
+              label="Portal Layanan Aktif"
+              size="small"
               sx={{
-                background: '#fff',
-                color: '#00b8ac',
-                fontWeight: 700,
-                '&:hover': {
-                  background: '#60c0d0',
-                  boxShadow: '0 6px 20px rgba(0,0,0,0.15)',
-                },
-              }}
-              id="btn-rekap-absensi"
-            >
-              Rekap Absensi
-            </Button>
-            <Button
-              variant="outlined"
-              startIcon={<DescriptionIcon />}
-              onClick={() => navigate('/kehadiran/lembur')}
-              sx={{
-                borderColor: 'rgba(255,255,255,0.6)',
+                mb: 1.5,
+                background: 'rgba(255,255,255,0.15)',
                 color: '#fff',
-                fontWeight: 700,
-                '&:hover': {
-                  borderColor: '#fff',
-                  background: 'rgba(255,255,255,0.1)',
-                },
+                fontWeight: 600,
+                fontSize: '0.7rem',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.25)',
               }}
-              id="btn-ajukan-lembur"
+            />
+            <Typography
+              variant="h4"
+              sx={{
+                color: '#fff',
+                fontWeight: 800,
+                mb: 2,
+                lineHeight: 1.2,
+                fontSize: { xs: '1.75rem', md: '2.5rem' },
+              }}
             >
-              Ajukan Lembur
-            </Button>
-          </Box>
-        </Box>
+              Selamat Datang di MANHUB 👋
+            </Typography>
+            <Typography
+              sx={{
+                color: 'rgba(255,255,255,0.9)',
+                fontSize: { xs: '0.9rem', md: '1rem' },
+                mb: 4,
+                maxWidth: 600,
+                lineHeight: 1.7,
+              }}
+            >
+              Platform terpadu manajemen administrasi dan layanan perkantoran Tim Kerja Dukungan Manajemen Biro Komunikasi dan Informasi Publik, Kementerian Kesehatan RI.
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              <Button
+                variant="contained"
+                startIcon={<AccessTimeIcon />}
+                onClick={() => navigate('/kehadiran/rekap')}
+                sx={{
+                  background: '#fff',
+                  color: '#00b8ac',
+                  px: 3,
+                  fontWeight: 700,
+                  '&:hover': {
+                    background: '#e0fcf9',
+                    boxShadow: '0 6px 20px rgba(0,0,0,0.15)',
+                  },
+                }}
+                id="btn-rekap-absensi"
+              >
+                Rekap Absensi
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<DescriptionIcon />}
+                onClick={() => navigate('/kehadiran/lembur')}
+                sx={{
+                  borderColor: 'rgba(255,255,255,0.6)',
+                  color: '#fff',
+                  px: 3,
+                  fontWeight: 700,
+                  '&:hover': {
+                    borderColor: '#fff',
+                    background: 'rgba(255,255,255,0.1)',
+                  },
+                }}
+                id="btn-ajukan-lembur"
+              >
+                Ajukan Lembur
+              </Button>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={7} sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
+            <Box
+              component="img"
+              src={bannerPeople}
+              alt="Manhub Team"
+              sx={{
+                width: '100%',
+                maxWidth: 750,
+                height: 'auto',
+                filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.2)) drop-shadow(0 0 15px rgba(255,255,255,0.2))',
+                animation: 'float 6s ease-in-out infinite',
+                '@keyframes float': {
+                  '0%, 100%': { transform: 'translateY(0) scale(1)' },
+                  '50%': { transform: 'translateY(-15px) scale(1.02)' },
+                }
+              }}
+            />
+          </Grid>
+        </Grid>
       </Box>
 
       {/* ─── STATS CARDS ─── */}
