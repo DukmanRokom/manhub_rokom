@@ -52,6 +52,7 @@ export const navItems: NavItem[] = [
     icon: AccountBalanceWalletIcon,
     children: [
       { label: 'Realisasi Anggaran', path: '/keuangan/realisasi', icon: BarChartIcon },
+      { label: 'SPJ', path: '/keuangan/spj', icon: AssignmentIcon },
     ],
   },
   {

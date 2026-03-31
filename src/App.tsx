@@ -16,6 +16,7 @@ import KatalogIkiPage from './pages/KatalogIkiPage';
 import AtkPage from './pages/AtkPage';
 import RuangRapatPage from './pages/RuangRapatPage';
 import LakipPage from './pages/LakipPage';
+import SpjPage from './pages/SpjPage';
 import DiagnosticPage from './pages/DiagnosticPage';
 import { AuthProvider } from './contexts/AuthContext';
 
@@ -41,6 +42,7 @@ function App() {
               <Route path="bmn/kendaraan" element={<KendaraanDinasPage />} />
               <Route path="bmn/ruangan" element={<RuangRapatPage />} />
               <Route path="bmn/atk" element={<AtkPage />} />
+              <Route path="keuangan/spj" element={<SpjPage />} />
               <Route path="diagnostic" element={<DiagnosticPage />} />
               <Route path="pengaturan" element={<PlaceholderPage title="Pengaturan" desc="Konfigurasi akun, notifikasi, dan preferensi aplikasi." />} />
               <Route path="bantuan" element={<PlaceholderPage title="Pusat Bantuan" desc="Panduan penggunaan, FAQ, dan kontak helpdesk teknis." />} />

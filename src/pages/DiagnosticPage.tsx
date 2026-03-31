@@ -82,6 +82,14 @@ export default function DiagnosticPage() {
             Test Get Budget
           </Button>
           <Button 
+            variant="contained" 
+            onClick={() => testConnection('getSpj')}
+            disabled={loading}
+            color="success"
+          >
+            Test Get SPJ
+          </Button>
+          <Button 
             variant="outlined" 
             onClick={() => testConnection('listSheets')}
             disabled={loading}

@@ -1,6 +1,6 @@
-// Use ONE URL for everything. This is the latest URL you provided.
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycby5FEyANXDee3_Rxod089GG3DWgRV5OL2gdv5CUqm7GU8zVDwPujX1Kbqg0myFP9JsaUA/exec';
 const CAPUT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzy6UMw3II2Rarcr1-Dn5FSA90sSwS3mY-_DUC0wLjykO8wHsCouNmEewMw2vo2JgZkPQ/exec';
+const SPJ_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwOFkrFOPEOQEg4krZJv30GG7T7HA-5C4fa7h23iTkWFn_OBrIKoVpc0mlnz7p70loj/exec';
 
 export interface BudgetData {
   id: number;
@@ -87,6 +87,15 @@ export interface LakipData {
   tahun: string;
   nama: string;
   url: string;
+}
+
+export interface SpjData {
+  untukpembayaran: string;
+  lokasi: string;
+  tanggal: string;
+  pelaksana: string;
+  statusberkas: string;
+  keterangan: string;
 }
 
 /**
@@ -493,5 +502,36 @@ export const googleSheetsService = {
         id: id
       }),
     });
+  },
+
+  async fetchSpjData(): Promise<SpjData[]> {
+    if (!SPJ_SHEET_URL) return [];
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${SPJ_SHEET_URL}?action=getSpj${cacheBuster}`);
+      const text = await resp.text();
+      
+      try {
+        const data = JSON.parse(text);
+        if (!Array.isArray(data)) {
+          console.error('SPJ Data is not an array:', data);
+          return [];
+        }
+        return data.map((item: any) => ({
+          untukpembayaran: (item.untukpembayaran || '').toString(),
+          lokasi: (item.lokasi || '').toString(),
+          tanggal: (item.tanggal || '').toString(),
+          pelaksana: (item.pelaksana || '').toString(),
+          statusberkas: (item.statusberkas || '').toString(),
+          keterangan: (item.keterangan || '').toString(),
+        }));
+      } catch (e) {
+        console.error('Invalid JSON from SPJ endpoint. Raw:', text);
+        return [];
+      }
+    } catch (err) {
+      console.error('Network error fetching SPJ data:', err);
+      return [];
+    }
   }
 };
