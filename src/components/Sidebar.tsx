@@ -8,7 +8,6 @@ import {
   ListItemText,
   Collapse,
   Typography,
-  Divider,
   useMediaQuery,
   useTheme as useMuiTheme,
 } from '@mui/material';
@@ -156,44 +155,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
       {/* Menu */}
       <Box sx={{ flex: 1, overflowY: 'auto', py: 1.5 }}>
-        <Typography
-          sx={{
-            px: 3,
-            pb: 0.5,
-            pt: 1,
-            fontSize: '0.68rem',
-            fontWeight: 700,
-            color: 'text.disabled',
-            textTransform: 'uppercase',
-            letterSpacing: 1.2,
-          }}
-        >
-          Menu Utama
-        </Typography>
         <List disablePadding>
-          {navItems.slice(0, 4).map(item => (
-            <NavItemComponent key={item.label} item={item} />
-          ))}
-        </List>
-
-        <Divider sx={{ my: 1.5, mx: 2 }} />
-
-        <Typography
-          sx={{
-            px: 3,
-            pb: 0.5,
-            pt: 0.5,
-            fontSize: '0.68rem',
-            fontWeight: 700,
-            color: 'text.disabled',
-            textTransform: 'uppercase',
-            letterSpacing: 1.2,
-          }}
-        >
-          Lainnya
-        </Typography>
-        <List disablePadding>
-          {navItems.slice(4).map(item => (
+          {navItems.map(item => (
             <NavItemComponent key={item.label} item={item} />
           ))}
         </List>
