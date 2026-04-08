@@ -24,8 +24,8 @@ export default function UsulanPerencanaanPage() {
     setLoading(true);
     try {
       const result = await googleSheetsService.fetchPerencanaanData();
-      // Sort by year descending
-      setData([...result].sort((a, b) => b.tahun.localeCompare(a.tahun)));
+      // Sort by year ascending
+      setData([...result].sort((a, b) => a.tahun.localeCompare(b.tahun)));
     } catch (error) {
       console.error('Error loading planning data:', error);
     } finally {

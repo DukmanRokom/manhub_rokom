@@ -69,6 +69,7 @@ export const navItems: NavItem[] = [
     icon: TrendingUpIcon,
     children: [
       { label: 'Usulan Perencanaan', path: '/perencanaan/usulan', icon: AssignmentIcon },
+      { label: 'Usulan Revisi', path: '/perencanaan/revisi', icon: AssignmentIcon },
     ],
   },
 ];
