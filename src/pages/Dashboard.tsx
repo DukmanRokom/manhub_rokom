@@ -10,6 +10,13 @@ import {
   Divider,
   LinearProgress,
   Paper,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -22,6 +29,8 @@ import StarIcon from '@mui/icons-material/Star';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import GroupsIcon from '@mui/icons-material/Groups';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import EditIcon from '@mui/icons-material/Edit';
+import PieChartIcon from '@mui/icons-material/PieChart';
 import { useNavigate } from 'react-router-dom';
 import {
   BarChart,
@@ -35,7 +44,8 @@ import {
   LabelList,
 } from 'recharts';
 import { useState, useEffect, useMemo } from 'react';
-import { googleSheetsService, BudgetData, EotmData, convertDriveLink } from '../services/googleSheets';
+import { googleSheetsService, BudgetData, EotmData, IpAsnData, convertDriveLink } from '../services/googleSheets';
+import { useAuth } from '../contexts/AuthContext';
 import SyncIcon from '@mui/icons-material/Sync';
 import {
   Table,
@@ -109,10 +119,18 @@ const statsData = [
 ];
 
 export default function Dashboard() {
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const [data, setData] = useState<BudgetData[]>([]);
   const [eotmData, setEotmData] = useState<EotmData[]>([]);
+  const [ipAsnData, setIpAsnData] = useState<IpAsnData | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Edit State
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState({ score: '', periode: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 
   const loadData = async () => {
     setLoading(true);
@@ -131,6 +149,16 @@ export default function Dashboard() {
       setEotmData(eotmResult || []);
     } catch (err) {
       console.error('Failed to fetch EOTM data:', err);
+    }
+
+    // Load IP ASN Data
+    try {
+      const ipAsnResult = await googleSheetsService.fetchIpAsnData();
+      if (ipAsnResult && ipAsnResult.length > 0) {
+        setIpAsnData(ipAsnResult[0]);
+      }
+    } catch (err) {
+      console.error('Failed to fetch IP ASN data:', err);
     }
 
     setLoading(false);
@@ -152,6 +180,38 @@ export default function Dashboard() {
       }
     }
     return period;
+  };
+
+  const handleOpenEdit = () => {
+    setEditFormData({
+      score: ipAsnData?.score.toString() || '',
+      periode: ipAsnData?.periode || ''
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleCloseEdit = () => {
+    setEditDialogOpen(false);
+  };
+
+  const handleSaveIpAsn = async () => {
+    setSubmitting(true);
+    try {
+      await googleSheetsService.updateIpAsnData({
+        id: ipAsnData?.id || 1,
+        score: parseFloat(editFormData.score) || 0,
+        periode: editFormData.periode
+      });
+      setNotification({ open: true, message: 'Data IP ASN berhasil diperbarui', severity: 'success' });
+      setEditDialogOpen(false);
+      // Wait a bit and reload
+      setTimeout(loadData, 1000);
+    } catch (err) {
+      console.error('Error saving IP ASN data:', err);
+      setNotification({ open: true, message: 'Gagal memperbarui data', severity: 'error' });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
 
@@ -304,6 +364,93 @@ export default function Dashboard() {
           </Grid>
         </Grid>
       </Box>
+
+      {/* ─── IP ASN CARD ─── */}
+      <Card
+        sx={{
+          mb: 4,
+          p: 0,
+          borderRadius: 3,
+          background: 'linear-gradient(90deg, #1565c0 0%, #1976d2 100%)',
+          color: '#fff',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 8px 25px rgba(21, 101, 192, 0.25)',
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: -20,
+            right: -20,
+            width: 150,
+            height: 150,
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.08)',
+          }}
+        />
+        <CardContent sx={{ p: { xs: 2, md: 3 }, position: 'relative', zIndex: 1 }}>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} md={8}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                <Box
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: '14px',
+                    background: 'rgba(255,255,255,0.15)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backdropFilter: 'blur(10px)',
+                  }}
+                >
+                  <PieChartIcon sx={{ fontSize: 28 }} />
+                </Box>
+                <Box>
+                  <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+                    IP ASN Biro Komunikasi dan Informasi Publik
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500 }}>
+                    Indeks Profesionalitas ASN - {ipAsnData?.periode || '-'}
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' }, alignItems: 'center', gap: 3 }}>
+              <Box sx={{ textAlign: { xs: 'left', md: 'right' } }}>
+                <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', opacity: 0.8, letterSpacing: 1 }}>
+                  Skor Indeks
+                </Typography>
+                <Typography variant="h3" sx={{ fontWeight: 900, lineHeight: 1 }}>
+                  {ipAsnData?.score || '0'}
+                </Typography>
+              </Box>
+              {isLoggedIn && (
+                <Button
+                  variant="contained"
+                  size="small"
+                  startIcon={<EditIcon />}
+                  onClick={handleOpenEdit}
+                  sx={{
+                    background: '#fff',
+                    color: '#1565c0',
+                    fontWeight: 700,
+                    borderRadius: '10px',
+                    px: 2,
+                    '&:hover': {
+                      background: '#f0f0f0',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                    },
+                  }}
+                >
+                  Edit IP ASN
+                </Button>
+              )}
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
 
       {/* ─── STATS CARDS ─── */}
       <Grid container spacing={2} sx={{ mb: 4 }}>
@@ -752,6 +899,51 @@ export default function Dashboard() {
           </Typography>
         </Box>
       </Paper>
+
+      {/* ─── EDIT IP ASN DIALOG ─── */}
+      <Dialog open={editDialogOpen} onClose={handleCloseEdit} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ fontWeight: 800 }}>Update IP ASN</DialogTitle>
+        <DialogContent dividers>
+          <Box sx={{ pt: 1, display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <TextField
+              label="Skor IP ASN"
+              type="number"
+              fullWidth
+              value={editFormData.score}
+              onChange={(e) => setEditFormData({ ...editFormData, score: e.target.value })}
+              helperText="Contoh: 85.5"
+            />
+            <TextField
+              label="Periode"
+              fullWidth
+              value={editFormData.periode}
+              onChange={(e) => setEditFormData({ ...editFormData, periode: e.target.value })}
+              helperText="Contoh: Triwulan I 2024"
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2.5 }}>
+          <Button onClick={handleCloseEdit} color="inherit" sx={{ fontWeight: 600 }}>Batal</Button>
+          <Button 
+            onClick={handleSaveIpAsn} 
+            variant="contained" 
+            disabled={submitting || !editFormData.score || !editFormData.periode}
+            sx={{ px: 3, fontWeight: 700 }}
+          >
+            {submitting ? 'Menyimpan...' : 'Simpan Perubahan'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar 
+        open={notification.open} 
+        autoHideDuration={6000} 
+        onClose={() => setNotification({ ...notification, open: false })}
+      >
+        <Alert severity={notification.severity} sx={{ width: '100%', fontWeight: 600 }}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
