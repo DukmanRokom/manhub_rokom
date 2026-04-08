@@ -26,6 +26,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StarIcon from '@mui/icons-material/Star';
+import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import { useAuth } from '../contexts/AuthContext';
 import { googleSheetsService, EotmData, convertDriveLink } from '../services/googleSheets';
 
@@ -42,6 +43,11 @@ export default function EotmPage() {
     jabatan: '',
   });
   
+  // Voting URL State
+  const [voteUrl, setVoteUrl] = useState('https://docs.google.com/forms/d/e/1FAIpQLSdDzU8iZ-MTRubP-Lkxj_CvLAJx4EZY5tf3Wt4MxlZxAHGqaw/viewform?usp=publish-editor');
+  const [editUrlDialogOpen, setEditUrlDialogOpen] = useState(false);
+  const [urlInput, setUrlInput] = useState(voteUrl);
+  
   const [submitting, setSubmitting] = useState(false);
   const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 
@@ -55,6 +61,18 @@ export default function EotmPage() {
       setNotification({ open: true, message: 'Gagal memuat data dari Google Sheets', severity: 'error' });
     } finally {
       setLoading(false);
+    }
+
+    // Load Voting URL from Config
+    try {
+      const configs = await googleSheetsService.fetchConfigs();
+      const voteConfig = configs.find(c => c.key === 'eotm_vote_url');
+      if (voteConfig && voteConfig.value) {
+        setVoteUrl(voteConfig.value);
+        setUrlInput(voteConfig.value);
+      }
+    } catch (error) {
+      console.error('Error loading config:', error);
     }
   };
 
@@ -117,6 +135,26 @@ export default function EotmPage() {
     }
   };
 
+  const handleOpenEditUrl = () => {
+    setUrlInput(voteUrl);
+    setEditUrlDialogOpen(true);
+  };
+
+  const handleSaveUrl = async () => {
+    setSubmitting(true);
+    try {
+      await googleSheetsService.updateConfig('eotm_vote_url', urlInput);
+      setVoteUrl(urlInput);
+      setNotification({ open: true, message: 'URL Voting berhasil diperbarui', severity: 'success' });
+      setEditUrlDialogOpen(false);
+    } catch (error) {
+      console.error('Error saving URL:', error);
+      setNotification({ open: true, message: 'Gagal memperbarui URL Voting', severity: 'error' });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const formatPeriod = (period: string) => {
     if (!period) return '';
     // If it looks like an ISO date string
@@ -154,6 +192,86 @@ export default function EotmPage() {
           </Button>
         )}
       </Box>
+
+      {/* Voting Section */}
+      <Paper 
+        elevation={0} 
+        sx={{ 
+          p: 3, 
+          mb: 5, 
+          borderRadius: 4, 
+          background: 'linear-gradient(135deg, #006b63 0%, #00b8ac 100%)',
+          color: '#fff',
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 2,
+          boxShadow: '0 10px 30px rgba(0, 184, 172, 0.2)'
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box 
+            sx={{ 
+              width: 50, 
+              height: 50, 
+              borderRadius: '15px', 
+              background: 'rgba(255,255,255,0.2)', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              backdropFilter: 'blur(10px)'
+            }}
+          >
+            <HowToVoteIcon sx={{ fontSize: 28 }} />
+          </Box>
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 800, lineHeight: 1.2 }}>
+              Ayo Berikan Suaramu!
+            </Typography>
+            <Typography variant="body2" sx={{ opacity: 0.9 }}>
+              Pilih rekan kerjamu yang paling menginspirasi bulan ini.
+            </Typography>
+          </Box>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 1, width: { xs: '100%', sm: 'auto' } }}>
+          <Button
+            variant="contained"
+            href={voteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            startIcon={<HowToVoteIcon />}
+            sx={{
+              background: '#fff',
+              color: '#006b63',
+              fontWeight: 800,
+              px: 4,
+              py: 1.5,
+              borderRadius: '12px',
+              '&:hover': {
+                background: '#e0fcf9',
+              },
+              flexGrow: 1
+            }}
+          >
+            Vote di sini!
+          </Button>
+          {isLoggedIn && (
+            <Tooltip title="Edit URL Voting">
+              <IconButton 
+                onClick={handleOpenEditUrl}
+                sx={{ 
+                  background: 'rgba(255,255,255,0.1)', 
+                  color: '#fff',
+                  '&:hover': { background: 'rgba(255,255,255,0.2)' } 
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Box>
+      </Paper>
 
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
@@ -372,6 +490,38 @@ export default function EotmPage() {
           {notification.message}
         </Alert>
       </Snackbar>
+
+      {/* Edit URL Dialog */}
+      <Dialog open={editUrlDialogOpen} onClose={() => setEditUrlDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ fontWeight: 800 }}>Edit URL Voting</DialogTitle>
+        <DialogContent dividers>
+          <Box sx={{ pt: 1 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Masukkan URL Google Form atau platform voting lainnya.
+            </Typography>
+            <TextField
+              fullWidth
+              label="URL Voting"
+              placeholder="https://docs.google.com/forms/..."
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              variant="outlined"
+              autoFocus
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 3 }}>
+          <Button onClick={() => setEditUrlDialogOpen(false)} color="inherit">Batal</Button>
+          <Button 
+            onClick={handleSaveUrl} 
+            variant="contained" 
+            disabled={submitting || !urlInput}
+            sx={{ px: 4, fontWeight: 700 }}
+          >
+            {submitting ? 'Menyimpan...' : 'Simpan URL'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
