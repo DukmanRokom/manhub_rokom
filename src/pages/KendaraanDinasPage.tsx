@@ -153,6 +153,9 @@ export default function KendaraanDinasPage() {
           <Typography sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
             Formulir permohonan penggunaan kendaraan dinas operasional
           </Typography>
+          <Typography sx={{ color: 'primary.main', fontSize: '0.875rem', fontWeight: 600, mt: 0.5 }}>
+            PIC : Abdul Suryadi
+          </Typography>
         </Box>
       </Box>
 

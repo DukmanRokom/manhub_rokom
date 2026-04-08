@@ -16,7 +16,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Divider,
   Snackbar,
   Alert,
   MenuItem,
@@ -265,6 +264,9 @@ export default function AtkPage() {
           <Box>
             <Typography variant="h5" sx={{ fontWeight: 800 }}>Permintaan ATK</Typography>
             <Typography variant="body2" color="text.secondary">Manajemen kebutuhan alat tulis kantor</Typography>
+            <Typography sx={{ color: 'primary.main', fontSize: '0.875rem', fontWeight: 600, mt: 0.5 }}>
+              PIC : Zahrudin
+            </Typography>
           </Box>
         </Box>
         <Button

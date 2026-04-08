@@ -175,6 +175,9 @@ export default function RuangRapatPage() {
             <Typography sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
               Monitoring penggunaan ruang rapat Biro Komunikasi dan Pelayanan Publik
             </Typography>
+            <Typography sx={{ color: 'primary.main', fontSize: '0.875rem', fontWeight: 600, mt: 0.5 }}>
+              PIC : Zahrudin
+            </Typography>
           </Box>
         </Box>
         <Button
