@@ -182,7 +182,7 @@ export default function AtkPage() {
         googleSheetsService.getAtkRequests()
       ]);
       setAtkMaster(master || []);
-      setRequests(reqs?.reverse() || []); // Show latest first
+      setRequests(reqs || []);
     } catch (error) {
       console.error('Failed to fetch ATK data:', error);
     } finally {
@@ -379,7 +379,7 @@ export default function AtkPage() {
                 ) : requests.length === 0 ? (
                   <TableRow><TableCell colSpan={4} align="center" sx={{ py: 4 }}>Belum ada riwayat.</TableCell></TableRow>
                 ) : (
-                  requests.map((req, i) => (
+                  [...requests].reverse().slice(0, 10).map((req, i) => (
                     <TableRow key={i} hover>
                       <TableCell>
                         <Typography variant="body2" sx={{ fontWeight: 700 }}>{req.namabarang}</Typography>

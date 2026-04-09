@@ -1,4 +1,4 @@
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwLx4wh4wfidXlBikSii_dt24V8fSHTdr_fXQg95AZ1oQ-IYADcO5YytMVjwi2_O9tXpA/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzB680czLYiEsvsb4G1ES4SrGId2hWNNr-TlPtlR9Bhx9-roA-v_rqGvQgybdPRPXVkWg/exec';
 const CAPUT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzy6UMw3II2Rarcr1-Dn5FSA90sSwS3mY-_DUC0wLjykO8wHsCouNmEewMw2vo2JgZkPQ/exec';
 const SPJ_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwOFkrFOPEOQEg4krZJv30GG7T7HA-5C4fa7h23iTkWFn_OBrIKoVpc0mlnz7p70loj/exec';
 const PERENCANAAN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw9y_qL1QshwVaH9SEHbA1tUwvGWP5fYXbxGmLnLnCX9QS2iZ4XrDwlHEn_zr4oQsIB/exec';
@@ -147,6 +147,47 @@ export const convertDriveLink = (url: string): string => {
   return url;
 };
 
+/**
+ * Formats a Google Sheets time string (e.g., "1899-12-30T02:00:00.000Z")
+ * to a simple "HH:mm" format.
+ */
+export const formatTime = (timeStr: string | number | undefined): string => {
+  if (!timeStr) return '';
+  if (typeof timeStr === 'number') {
+    // Convert Excel fractional day back to hours and minutes
+    const totalMinutes = Math.round(timeStr * 24 * 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  }
+  
+  if (typeof timeStr === 'string' && timeStr.includes('T')) {
+     const date = new Date(timeStr);
+     if (!isNaN(date.getTime())) {
+        const h = date.getHours().toString().padStart(2, '0');
+        const m = date.getMinutes().toString().padStart(2, '0');
+        return `${h}:${m}`;
+     }
+  }
+
+  return timeStr.toString();
+};
+
+const formatDate = (dateStr: any): string => {
+  if (!dateStr) return '';
+  const str = dateStr.toString();
+  if (str.includes('T')) {
+    const d = new Date(str);
+    if (!isNaN(d.getTime())) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+  }
+  return str;
+};
+
 export const googleSheetsService = {
   async fetchAttendanceData(): Promise<any[]> {
     const ATTENDANCE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw1hUO8tdzWB73IVBbi2D7MuacKIFXej7-0o-LLW5cGKk_KdeS9_gnnVxmXwCG65P_w/exec?action=attendance';
@@ -228,7 +269,7 @@ export const googleSheetsService = {
               nama: rawNama,
               jabatan: rawJabatan,
             };
-          });
+          }).reverse().slice(0, 10);
       } catch (e) {
         console.error('Invalid JSON from Google Sheets. Raw response:', text);
         return [];
@@ -290,7 +331,9 @@ export const googleSheetsService = {
       },
       body: JSON.stringify({
         action: 'addVehicleRequest',
-        ...item
+        ...item,
+        timestamp: new Date().toISOString(),
+        Timestamp: new Date().toISOString() // Try both cases for compatibility
       }),
     });
   },
@@ -304,10 +347,10 @@ export const googleSheetsService = {
         namapemohon: item.namapemohon || '',
         unitkerja: item.unitkerja || '',
         kendaraan: item.kendaraan || '',
-        tanggalpeminjaman: item.tanggalpeminjaman || '',
-        tanggalkembali: item.tanggalkembali || '',
-        jammulaipeminjaman: item.jammulaipeminjaman || '',
-        estimasijamkembali: item.estimasijamkembali || '',
+        tanggalpeminjaman: formatDate(item.tanggalpeminjaman),
+        tanggalkembali: formatDate(item.tanggalkembali),
+        jammulaipeminjaman: formatTime(item.jammulaipeminjaman),
+        estimasijamkembali: formatTime(item.estimasijamkembali),
         ruteperjalanandinas: item.ruteperjalanandinas || '',
         agendakegiatan: item.agendakegiatan || '',
       }));
@@ -342,9 +385,9 @@ export const googleSheetsService = {
         ruangan: item.ruangan || '',
         namapemohon: item.namapemohon || '',
         unitkerja: item.unitkerja || '',
-        tanggal: item.tanggal || '',
-        jammulai: item.jammulai || '',
-        jamselesai: item.jamselesai || '',
+        tanggal: formatDate(item.tanggal),
+        jammulai: formatTime(item.jammulai),
+        jamselesai: formatTime(item.jamselesai),
         agenda: item.agenda || '',
       }));
     } catch (err) {
@@ -363,7 +406,9 @@ export const googleSheetsService = {
         },
         body: JSON.stringify({
           action: 'addRoomBooking',
-          ...item
+          ...item,
+          timestamp: new Date().toISOString(),
+          Timestamp: new Date().toISOString() // Try both cases for compatibility
         }),
       });
     } catch (err) {
@@ -399,7 +444,9 @@ export const googleSheetsService = {
         },
         body: JSON.stringify({
           action: 'addAtkRequest',
-          ...item
+          ...item,
+          timestamp: new Date().toISOString(),
+          Timestamp: new Date().toISOString() // Try both cases for compatibility
         }),
       });
     } catch (err) {

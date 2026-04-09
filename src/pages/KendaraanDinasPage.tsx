@@ -408,7 +408,7 @@ export default function KendaraanDinasPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                requests.map((row, index) => (
+                [...requests].reverse().slice(0, 10).map((row, index) => (
                   <TableRow key={index} hover>
                     <TableCell sx={{ fontWeight: 600 }}>{row.namapemohon}</TableCell>
                     <TableCell sx={{ fontSize: '0.85rem' }}>{row.unitkerja}</TableCell>

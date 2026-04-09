@@ -128,7 +128,11 @@ export default function RuangRapatPage() {
     }
   };
 
-  const todayStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = String(today.getMonth() + 1).padStart(2, '0');
+  const d = String(today.getDate()).padStart(2, '0');
+  const todayStr = `${y}-${m}-${d}`;
 
   // Helper to convert HH:mm or HH.mm to total minutes for safe comparison
   const timeToMinutes = (timeStr: string) => {
@@ -410,7 +414,7 @@ export default function RuangRapatPage() {
               ) : bookings.length === 0 ? (
                 <TableRow><TableCell colSpan={4} align="center">Belum ada data peminjaman.</TableCell></TableRow>
               ) : (
-                bookings.map((b, i) => (
+                [...bookings].reverse().slice(0, 10).map((b, i) => (
                   <TableRow key={i} hover>
                     <TableCell sx={{ fontWeight: 600 }}>{b.ruangan}</TableCell>
                     <TableCell>
