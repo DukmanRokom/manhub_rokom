@@ -627,16 +627,16 @@ export default function Dashboard() {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                 <StarIcon sx={{ color: '#FFD700', fontSize: 20 }} />
                 <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: 'rgba(255,255,255,0.85)' }}>
-                  Employee of the Month – {formatPeriod(eotmData[eotmData.length - 1]?.periode) || 'Maret 2025'}
+                  Employee of the Month – {formatPeriod(eotmData[0]?.periode) || 'Maret 2025'}
                 </Typography>
               </Box>
 
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 1 }}>
                 <Avatar
-                  src={convertDriveLink(eotmData[eotmData.length - 1]?.fotoUrl)}
+                  src={convertDriveLink(eotmData[0]?.fotoUrl)}
                   imgProps={{
                     onError: (e: any) => {
-                      e.target.src = 'https://via.placeholder.com/150?text=' + (eotmData[eotmData.length - 1]?.nama?.charAt(0) || 'E');
+                      e.target.src = 'https://via.placeholder.com/150?text=' + (eotmData[0]?.nama?.charAt(0) || 'E');
                     }
                   }}
                   sx={{
@@ -650,13 +650,13 @@ export default function Dashboard() {
                     boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
                   }}
                 >
-                  {eotmData[eotmData.length - 1]?.nama?.charAt(0) || 'E'}
+                  {eotmData[0]?.nama?.charAt(0) || 'E'}
                 </Avatar>
                 <Typography variant="h6" sx={{ fontWeight: 800, color: '#fff', textAlign: 'center', mb: 0.5 }}>
-                  {eotmData[eotmData.length - 1]?.nama || 'Belum Ada Data'}
+                  {eotmData[0]?.nama || 'Belum Ada Data'}
                 </Typography>
                 <Typography sx={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.75)', textAlign: 'center', mb: 2 }}>
-                  {eotmData[eotmData.length - 1]?.jabatan || 'Silakan lengkapi di halaman SDM'}
+                  {eotmData[0]?.jabatan || 'Silakan lengkapi di halaman SDM'}
                 </Typography>
 
                 <Divider sx={{ width: '100%', borderColor: 'rgba(255,255,255,0.15)', mb: 2 }} />
