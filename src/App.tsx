@@ -13,6 +13,7 @@ import KendaraanDinasPage from './pages/KendaraanDinasPage';
 import DataPegawaiPage from './pages/DataPegawaiPage';
 import CapaianOutputPage from './pages/CapaianOutputPage';
 import KatalogIkiPage from './pages/KatalogIkiPage';
+import KatalogIkiPrahumPage from './pages/KatalogIkiPrahumPage';
 import AtkPage from './pages/AtkPage';
 import RuangRapatPage from './pages/RuangRapatPage';
 import LakipPage from './pages/LakipPage';
@@ -40,6 +41,7 @@ function App() {
               <Route path="monev/lakip" element={<LakipPage />} />
               <Route path="sdm/pegawai" element={<DataPegawaiPage />} />
               <Route path="sdm/katalog-iki" element={<KatalogIkiPage />} />
+              <Route path="sdm/katalog-iki/prahum" element={<KatalogIkiPrahumPage />} />
               <Route path="sdm/eotm" element={<EotmPage />} />
               <Route path="bmn/kendaraan" element={<KendaraanDinasPage />} />
               <Route path="bmn/ruangan" element={<RuangRapatPage />} />

@@ -10,8 +10,10 @@ import {
 import GroupsIcon from '@mui/icons-material/Groups';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useNavigate } from 'react-router-dom';
 
 export default function KatalogIkiPage() {
+  const navigate = useNavigate();
   const categories = [
     {
       title: 'Humas',
@@ -20,6 +22,7 @@ export default function KatalogIkiPage() {
       icon: GroupsIcon,
       color: '#00b8ac',
       bg: 'linear-gradient(135deg, #006b63 0%, #00b8ac 100%)',
+      path: '/sdm/katalog-iki/prahum',
     },
     {
       title: 'Pustakawan',
@@ -28,6 +31,7 @@ export default function KatalogIkiPage() {
       icon: LibraryBooksIcon,
       color: '#1565c0',
       bg: 'linear-gradient(135deg, #0d47a1 0%, #1976d2 100%)',
+      path: null,
     },
   ];
 
@@ -66,7 +70,7 @@ export default function KatalogIkiPage() {
                 },
               }}
             >
-              <CardActionArea sx={{ height: '100%', p: 1 }}>
+              <CardActionArea sx={{ height: '100%', p: 1 }} onClick={() => cat.path && navigate(cat.path)}>
                 <CardContent sx={{ p: 4 }}>
                   <Box
                     sx={{

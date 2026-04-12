@@ -2,6 +2,17 @@ const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzB680czLYiEsvsb4G1ES
 const CAPUT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzy6UMw3II2Rarcr1-Dn5FSA90sSwS3mY-_DUC0wLjykO8wHsCouNmEewMw2vo2JgZkPQ/exec';
 const SPJ_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwOFkrFOPEOQEg4krZJv30GG7T7HA-5C4fa7h23iTkWFn_OBrIKoVpc0mlnz7p70loj/exec';
 const PERENCANAAN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw9y_qL1QshwVaH9SEHbA1tUwvGWP5fYXbxGmLnLnCX9QS2iZ4XrDwlHEn_zr4oQsIB/exec';
+// ← Ganti dengan URL Apps Script Google Sheet Pranata Humas setelah deploy
+const PRAHUM_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzWw1NkcVO3zAxGJ2juRJQlvglYvqbI9Ap_Av557P_XkAb9vY2xPROb-CcEEj0WI7xL/exec';
+
+export interface PrahumData {
+  id: number;
+  pranatahumas: string;
+  jabatan: string;
+  rencanahasilkerja: string;
+  indikatorkinerjaindividu: string;
+  satuan: string;
+}
 
 export interface PerencanaanData {
   id: number;
@@ -160,14 +171,14 @@ export const formatTime = (timeStr: string | number | undefined): string => {
     const minutes = totalMinutes % 60;
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   }
-  
+
   if (typeof timeStr === 'string' && timeStr.includes('T')) {
-     const date = new Date(timeStr);
-     if (!isNaN(date.getTime())) {
-        const h = date.getHours().toString().padStart(2, '0');
-        const m = date.getMinutes().toString().padStart(2, '0');
-        return `${h}:${m}`;
-     }
+    const date = new Date(timeStr);
+    if (!isNaN(date.getTime())) {
+      const h = date.getHours().toString().padStart(2, '0');
+      const m = date.getMinutes().toString().padStart(2, '0');
+      return `${h}:${m}`;
+    }
   }
 
   return timeStr.toString();
@@ -575,7 +586,7 @@ export const googleSheetsService = {
       const cacheBuster = `&t=${Date.now()}`;
       const resp = await fetch(`${SPJ_SHEET_URL}?action=getSpj${cacheBuster}`);
       const text = await resp.text();
-      
+
       try {
         const data = JSON.parse(text);
         if (!Array.isArray(data)) {
@@ -606,7 +617,7 @@ export const googleSheetsService = {
       const cacheBuster = `&t=${Date.now()}`;
       const resp = await fetch(`${PERENCANAAN_SHEET_URL}?action=getPerencanaan${cacheBuster}`);
       const text = await resp.text();
-      
+
       try {
         const data = JSON.parse(text);
         if (!Array.isArray(data)) return [];
@@ -683,5 +694,27 @@ export const googleSheetsService = {
         value
       }),
     });
-  }
+  },
+
+  async fetchPrahumData(): Promise<PrahumData[]> {
+    if (!PRAHUM_SHEET_URL || PRAHUM_SHEET_URL.startsWith('PASTE_')) return [];
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${PRAHUM_SHEET_URL}?action=getPrahum${cacheBuster}`);
+      const text = await resp.text();
+      const data = JSON.parse(text);
+      if (!Array.isArray(data)) return [];
+      return data.map((item: any, idx: number) => ({
+        id: Number(item.id || item.Id || item.ID || idx + 1),
+        pranatahumas: (item.pranatahumas || item['pranata humas'] || item['Pranata Humas'] || '').toString().trim(),
+        jabatan: (item['jabatanjenjang'] || item.jabatan || item['jabatan/jenjang'] || item['Jabatan/Jenjang'] || '').toString().trim(),
+        rencanahasilkerja: (item.rencanahasilkerja || item['rencana hasil kerja'] || item['Rencana Hasil Kerja'] || '').toString().trim(),
+        indikatorkinerjaindividu: (item.indikatorkinerjaindividu || item['indikator kinerja individu'] || item['Indikator Kinerja Individu'] || '').toString().trim(),
+        satuan: (item.satuan || item.Satuan || '').toString().trim(),
+      }));
+    } catch (err) {
+      console.error('Error fetching Prahum data:', err);
+      return [];
+    }
+  },
 };
