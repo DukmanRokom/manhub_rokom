@@ -27,10 +27,10 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import GroupsIcon from '@mui/icons-material/Groups';
-import { googleSheetsService, PrahumData } from '../services/googleSheets';
+import { googleSheetsService, PustakawanData } from '../services/googleSheets';
 
-export default function KatalogIkiPrahumPage() {
-  const [data, setData] = useState<PrahumData[]>([]);
+export default function KatalogIkiPustakawanPage() {
+  const [data, setData] = useState<PustakawanData[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -44,10 +44,10 @@ export default function KatalogIkiPrahumPage() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const result = await googleSheetsService.fetchPrahumData();
+      const result = await googleSheetsService.fetchPustakawanData();
       setData(Array.isArray(result) ? result : []);
     } catch (error) {
-      console.error('Error loading Prahum data:', error);
+      console.error('Error loading Pustakawan data:', error);
       setData([]);
     } finally {
       setLoading(false);
@@ -65,7 +65,6 @@ export default function KatalogIkiPrahumPage() {
   const filteredData = data.filter((item) => {
     const search = searchTerm.toLowerCase();
     return (
-      (item.pranatahumas || '').toLowerCase().includes(search) ||
       (item.jabatan || '').toLowerCase().includes(search) ||
       (item.rencanahasilkerja || '').toLowerCase().includes(search) ||
       (item.indikatorkinerjaindividu || '').toLowerCase().includes(search) ||
@@ -129,8 +128,8 @@ export default function KatalogIkiPrahumPage() {
       },
       columnStyles: {
         0: { cellWidth: 30 },
-        1: { cellWidth: 100 },
-        2: { cellWidth: 150 },
+        1: { cellWidth: 110 },
+        2: { cellWidth: 160 },
         3: { cellWidth: 180 },
         4: { cellWidth: 60 },
       },
@@ -167,11 +166,11 @@ export default function KatalogIkiPrahumPage() {
       },
     });
 
-    doc.save('Katalog_IKI_Prahum.pdf');
+    doc.save('Katalog_IKI_Pustakawan.pdf');
   };
 
-  const accentColor = '#00b8ac';
-  const gradientBg = 'linear-gradient(135deg, #006b63 0%, #00b8ac 100%)';
+  const accentColor = '#3b82f6'; // Different accent color for Pustakawan
+  const gradientBg = 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)';
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -211,7 +210,7 @@ export default function KatalogIkiPrahumPage() {
               Katalog Indikator Kinerja
             </Typography>
             <Typography sx={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500, mt: 0.3 }}>
-              Pranata Hubungan Masyarakat
+              Pustakawan
             </Typography>
           </Box>
         </Box>
@@ -248,7 +247,7 @@ export default function KatalogIkiPrahumPage() {
         <TextField
           fullWidth
           variant="outlined"
-          placeholder="Cari berdasarkan nama, jabatan/jenjang, rencana hasil kerja, indikator, atau satuan…"
+          placeholder="Cari berdasarkan jabatan/jenjang, rencana hasil kerja, indikator, atau satuan…"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -285,13 +284,13 @@ export default function KatalogIkiPrahumPage() {
             color="primary"
             onClick={generatePDF}
             sx={{
-              bgcolor: '#006b63',
+              bgcolor: '#1e40af',
               borderRadius: 2,
               px: 3,
               py: 1,
               fontWeight: 700,
               textTransform: 'none',
-              '&:hover': { bgcolor: '#004d47' }
+              '&:hover': { bgcolor: '#1e3a8a' }
             }}
           >
             Download PDF ({selectedItems.length} item)
@@ -300,14 +299,14 @@ export default function KatalogIkiPrahumPage() {
             variant="outlined"
             onClick={handleResetSelection}
             sx={{
-              color: '#006b63',
-              borderColor: '#006b63',
+              color: '#1e40af',
+              borderColor: '#1e40af',
               borderRadius: 2,
               px: 3,
               py: 1,
               fontWeight: 700,
               textTransform: 'none',
-              '&:hover': { borderColor: '#004d47', bgcolor: alpha('#006b63', 0.04) }
+              '&:hover': { borderColor: '#1e3a8a', bgcolor: alpha('#1e40af', 0.04) }
             }}
           >
             Reset Pilihan
@@ -330,7 +329,7 @@ export default function KatalogIkiPrahumPage() {
               <TableCell 
                 sx={{ 
                   width: 50, 
-                  bgcolor: '#f0fafa', 
+                  bgcolor: '#f8fafc', 
                   borderBottom: `2px solid ${alpha(accentColor, 0.3)}` 
                 }}
               >
@@ -339,13 +338,12 @@ export default function KatalogIkiPrahumPage() {
                   indeterminate={selectedItems.length > 0 && selectedItems.length < filteredData.length}
                   checked={filteredData.length > 0 && selectedItems.length === filteredData.length}
                   onChange={handleSelectAll}
-                  sx={{ color: '#006b63', '&.Mui-checked': { color: '#006b63' }, '&.MuiCheckbox-indeterminate': { color: '#006b63' } }}
+                  sx={{ color: '#1e40af', '&.Mui-checked': { color: '#1e40af' }, '&.MuiCheckbox-indeterminate': { color: '#1e40af' } }}
                 />
               </TableCell>
               {[
                 { label: 'No', width: 52 },
-                { label: 'Pranata Humas', width: 180 },
-                { label: 'Jabatan / Jenjang', width: 180 },
+                { label: 'Jabatan / Jenjang', width: 220 },
                 { label: 'Rencana Hasil Kerja', width: undefined },
                 { label: 'Indikator Kinerja Individu', width: undefined },
                 { label: 'Satuan', width: 120 },
@@ -354,8 +352,8 @@ export default function KatalogIkiPrahumPage() {
                   key={col.label}
                   sx={{
                     fontWeight: 700,
-                    bgcolor: '#f0fafa',
-                    color: '#006b63',
+                    bgcolor: '#f8fafc',
+                    color: '#1e40af',
                     fontSize: '0.82rem',
                     letterSpacing: 0.3,
                     borderBottom: `2px solid ${alpha(accentColor, 0.3)}`,
@@ -372,7 +370,7 @@ export default function KatalogIkiPrahumPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={7} align="center" sx={{ py: 12 }}>
+                <TableCell colSpan={6} align="center" sx={{ py: 12 }}>
                   <CircularProgress sx={{ color: accentColor }} />
                   <Typography sx={{ mt: 2, color: 'text.secondary' }}>
                     Memuat data katalog…
@@ -381,7 +379,7 @@ export default function KatalogIkiPrahumPage() {
               </TableRow>
             ) : paginatedData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} align="center" sx={{ py: 12 }}>
+                <TableCell colSpan={6} align="center" sx={{ py: 12 }}>
                   <Typography color="text.secondary">
                     {searchTerm
                       ? 'Tidak ada data yang cocok dengan pencarian Anda.'
@@ -404,8 +402,8 @@ export default function KatalogIkiPrahumPage() {
                       '&:last-child td': { border: 0 },
                       '&:hover': { bgcolor: alpha(accentColor, 0.04) },
                       ...(isSelected && {
-                        bgcolor: alpha('#006b63', 0.08),
-                        '&:hover': { bgcolor: alpha('#006b63', 0.12) },
+                        bgcolor: alpha('#1e40af', 0.08),
+                        '&:hover': { bgcolor: alpha('#1e40af', 0.12) },
                       }),
                     }}
                   >
@@ -413,14 +411,11 @@ export default function KatalogIkiPrahumPage() {
                       <Checkbox
                         checked={isSelected}
                         onChange={() => handleSelectRow(rowId)}
-                        sx={{ color: '#006b63', '&.Mui-checked': { color: '#006b63' } }}
+                        sx={{ color: '#1e40af', '&.Mui-checked': { color: '#1e40af' } }}
                       />
                     </TableCell>
                     <TableCell sx={{ color: 'text.disabled', fontSize: '0.82rem' }}>
                     {page * rowsPerPage + index + 1}
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 600, fontSize: '0.85rem' }}>
-                    {row.pranatahumas}
                   </TableCell>
                   <TableCell>
                     <Chip
@@ -428,7 +423,7 @@ export default function KatalogIkiPrahumPage() {
                       size="small"
                       sx={{
                         bgcolor: alpha(accentColor, 0.1),
-                        color: '#006b63',
+                        color: '#1e40af',
                         fontWeight: 600,
                         fontSize: '0.75rem',
                         height: 'auto',
@@ -446,7 +441,7 @@ export default function KatalogIkiPrahumPage() {
                       fontSize: '0.85rem',
                       color: 'text.primary',
                       lineHeight: 1.5,
-                      maxWidth: 260,
+                      maxWidth: 300,
                     }}
                   >
                     {row.rencanahasilkerja}
@@ -456,7 +451,7 @@ export default function KatalogIkiPrahumPage() {
                       fontSize: '0.85rem',
                       color: 'text.secondary',
                       lineHeight: 1.5,
-                      maxWidth: 260,
+                      maxWidth: 300,
                     }}
                   >
                     {row.indikatorkinerjaindividu}

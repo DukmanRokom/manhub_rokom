@@ -4,10 +4,19 @@ const SPJ_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwOFkrFOPEOQEg4kr
 const PERENCANAAN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw9y_qL1QshwVaH9SEHbA1tUwvGWP5fYXbxGmLnLnCX9QS2iZ4XrDwlHEn_zr4oQsIB/exec';
 // ← Ganti dengan URL Apps Script Google Sheet Pranata Humas setelah deploy
 const PRAHUM_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzWw1NkcVO3zAxGJ2juRJQlvglYvqbI9Ap_Av557P_XkAb9vY2xPROb-CcEEj0WI7xL/exec';
+const PUSTAKAWAN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw8y4lopbkmn_pptqOMmt7TpxojiQ0HRsdlxgFX_gT7dR99eviOPH9eXSFTg03YxLAcLg/exec';
 
 export interface PrahumData {
   id: number;
   pranatahumas: string;
+  jabatan: string;
+  rencanahasilkerja: string;
+  indikatorkinerjaindividu: string;
+  satuan: string;
+}
+
+export interface PustakawanData {
+  id: number;
   jabatan: string;
   rencanahasilkerja: string;
   indikatorkinerjaindividu: string;
@@ -714,6 +723,27 @@ export const googleSheetsService = {
       }));
     } catch (err) {
       console.error('Error fetching Prahum data:', err);
+      return [];
+    }
+  },
+
+  async fetchPustakawanData(): Promise<PustakawanData[]> {
+    if (!PUSTAKAWAN_SHEET_URL || PUSTAKAWAN_SHEET_URL.startsWith('PASTE_')) return [];
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${PUSTAKAWAN_SHEET_URL}?action=getPustakawan${cacheBuster}`);
+      const text = await resp.text();
+      const data = JSON.parse(text);
+      if (!Array.isArray(data)) return [];
+      return data.map((item: any, idx: number) => ({
+        id: Number(item.id || item.Id || item.ID || idx + 1),
+        jabatan: (item['jabatanjenjang'] || item.jabatan || item['jabatan/jenjang'] || item['Jabatan/Jenjang'] || '').toString().trim(),
+        rencanahasilkerja: (item.rencanahasilkerja || item['rencana hasil kerja'] || item['Rencana Hasil Kerja'] || '').toString().trim(),
+        indikatorkinerjaindividu: (item.indikatorkinerjaindividu || item['indikator kinerja individu'] || item['Indikator Kinerja Individu'] || '').toString().trim(),
+        satuan: (item.satuan || item.Satuan || '').toString().trim(),
+      }));
+    } catch (err) {
+      console.error('Error fetching Pustakawan data:', err);
       return [];
     }
   },

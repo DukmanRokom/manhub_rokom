@@ -47,6 +47,7 @@ export const navItems: NavItem[] = [
       { label: 'Katalog Indikator Kinerja', path: '/sdm/katalog-iki', icon: MenuBookIcon,
         children: [
           { label: 'Pranata Humas', path: '/sdm/katalog-iki/prahum', icon: GroupsIcon },
+          { label: 'Pustakawan', path: '/sdm/katalog-iki/pustakawan', icon: GroupsIcon },
         ],
       },
       { label: 'Employee of the Month', path: '/sdm/eotm', icon: StarIcon },
