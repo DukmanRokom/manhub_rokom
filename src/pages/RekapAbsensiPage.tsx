@@ -196,12 +196,26 @@ export default function RekapAbsensiPage() {
       });
 
       // Sort years descending
+      const monthOrder = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      const getMonthWeight = (monthName: string) => {
+        const match = monthName.match(/^(\d+)/);
+        if (match) return parseInt(match[1]);
+        const index = monthOrder.findIndex(m => monthName.includes(m));
+        return index !== -1 ? index + 1 : 0;
+      };
+
       const result = Object.keys(groups).sort((a, b) => b.localeCompare(a)).reduce((yearAcc, year) => {
         const { utama, months } = groups[year];
+        
+        // Sort utama files by updatedAt descending
+        const sortedUtama = [...utama].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+
         yearAcc[year] = {
-          utama: utama,
-          months: Object.keys(months).sort().reduce((monthAcc, month) => {
-            monthAcc[month] = months[month];
+          utama: sortedUtama,
+          months: Object.keys(months).sort((a, b) => getMonthWeight(b) - getMonthWeight(a)).reduce((monthAcc, month) => {
+            // Sort files within month by name or updateDate? User usually wants by name or type.
+            // Let's sort by updatedAt for "newest first" logic
+            monthAcc[month] = [...months[month]].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
             return monthAcc;
           }, {} as { [month: string]: AttendanceFile[] })
         };

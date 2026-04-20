@@ -502,28 +502,41 @@ export const googleSheetsService = {
       const resp = await fetch(`${CAPUT_SHEET_URL}?action=getCapaianOutput${cacheBuster}`);
       const data = await resp.json();
 
-      return data.map((item: any) => ({
-        kode: item.kode || '',
-        komponen: item.komponen || '',
-        target: item.target || '',
-        timKerja: item.timkerja || '',
-        keterangan: item.keterangan || '',
-        realisasi: {
-          jan: item.januari,
-          feb: item.februari,
-          mar: item.maret,
-          apr: item.april,
-          mei: item.mei,
-          jun: item.juni,
-          jul: item.juli,
-          agu: item.agustus,
-          sep: item.september,
-          okt: item.oktober,
-          nov: item.november,
-          des: item.desember,
-        },
-        isHeader: item.isheader === true || item.isHeader === true,
-      }));
+      if (!Array.isArray(data)) return [];
+
+      return data.map((item: any) => {
+        // Robust mapping for varying header cases from Apps Script
+        const getVal = (keys: string[]) => {
+          for (const key of keys) {
+            if (item[key] !== undefined) return item[key];
+            if (item[key.toLowerCase()] !== undefined) return item[key.toLowerCase()];
+          }
+          return '';
+        };
+
+        return {
+          kode: String(getVal(['kode', 'Kode', 'Mata Anggaran'])).trim(),
+          komponen: String(getVal(['komponen', 'Komponen', 'Komponen Kegiatan'])).trim(),
+          target: String(getVal(['target', 'Target'])).trim(),
+          timKerja: String(getVal(['timkerja', 'timKerja', 'Tim Kerja', 'Tim'])).trim(),
+          keterangan: String(getVal(['keterangan', 'Keterangan'])).trim(),
+          realisasi: {
+            jan: getVal(['januari', 'jan', 'Januari']),
+            feb: getVal(['februari', 'feb', 'Februari']),
+            mar: getVal(['maret', 'mar', 'Maret']),
+            apr: getVal(['april', 'apr', 'April']),
+            mei: getVal(['mei', 'Mei']),
+            jun: getVal(['juni', 'jun', 'Juni']),
+            jul: getVal(['juli', 'jul', 'Juli']),
+            agu: getVal(['agustus', 'agu', 'Agustus']),
+            sep: getVal(['september', 'sep', 'September']),
+            okt: getVal(['oktober', 'okt', 'Oktober']),
+            nov: getVal(['november', 'nov', 'November']),
+            des: getVal(['desember', 'des', 'Desember']),
+          },
+          isHeader: item.isheader === true || item.isHeader === true || String(item.kode || '').length <= 10 && !item.komponen, 
+        };
+      });
     } catch (err) {
       console.error('Error fetching Capaian Output data:', err);
       return [];

@@ -31,6 +31,8 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import EditIcon from '@mui/icons-material/Edit';
 import PieChartIcon from '@mui/icons-material/PieChart';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import CheckIcon from '@mui/icons-material/Check';
 import { useNavigate } from 'react-router-dom';
 import {
   BarChart,
@@ -868,37 +870,85 @@ export default function Dashboard() {
             </Box>
           </>
         )}
+      </Paper>
 
-        <Box
-          sx={{
-            mt: 3,
-            p: 2,
-            borderRadius: 2,
-            background: '#f0fafa',
-            border: '1px solid #60c0d0',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1.5,
+      {/* ─── TIPS SECTION ─── */}
+      <Box 
+        sx={{ 
+          mt: 4, 
+          mb: 2, 
+          p: { xs: 2.5, md: 3 }, 
+          borderRadius: 4, 
+          background: 'linear-gradient(135deg, #e0f7f9 0%, #b2ebf2 100%)', 
+          border: '1px solid #80deea',
+          boxShadow: '0 4px 20px rgba(0, 184, 172, 0.08)',
+          position: 'relative',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          gap: 3,
+          alignItems: 'flex-start'
+        }}
+      >
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            pt: 0.5
           }}
         >
-          <Box
-            sx={{
-              width: 32,
-              height: 32,
-              borderRadius: '50%',
-              background: '#60c0d0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+          <LightbulbIcon sx={{ color: '#fbc02d', fontSize: 32, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }} />
+        </Box>
+
+        <Box sx={{ flex: 1 }}>
+          <Typography 
+            variant="subtitle1" 
+            sx={{ 
+              fontWeight: 700, 
+              color: '#00796b', 
+              mb: 2, 
+              fontSize: '1rem',
+              letterSpacing: 0.2
             }}
           >
-            <TrendingUpIcon sx={{ color: '#00b8ac', fontSize: 18 }} />
-          </Box>
-          <Typography sx={{ fontSize: '0.78rem', color: 'text.secondary', lineHeight: 1.5 }}>
-            <strong style={{ color: '#00b8ac' }}>Status:</strong> Data tersinkronisasi otomatis dengan Google Sheets. Gunakan tombol Refresh untuk pembaruan manual.
+            Tips Penggunaan Platform
           </Typography>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+            {[
+              'Pilih kategori menu sesuai dengan jenis laporan yang akan diakses.',
+              'Data tersinkronisasi secara otomatis ke dalam Google Sheets/Google Drive.',
+              'Gunakan tombol Refresh untuk pembaruan data secara manual.',
+              'Pastikan jaringan internet stabil agar proses unggah data berjalan lancar.'
+            ].map((tip, index) => (
+              <Box 
+                key={index}
+                sx={{ 
+                  display: 'flex', 
+                  alignItems: 'flex-start', 
+                  gap: 1.5,
+                  transition: 'transform 0.2s',
+                  '&:hover': { transform: 'translateX(4px)' }
+                }}
+              >
+                <CheckIcon sx={{ color: '#00b8ac', fontSize: 18, mt: 0.3 }} />
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    color: '#004d40', 
+                    fontWeight: 500, 
+                    lineHeight: 1.5,
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  {tip}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
         </Box>
-      </Paper>
+      </Box>
 
       {/* ─── EDIT IP ASN DIALOG ─── */}
       <Dialog open={editDialogOpen} onClose={handleCloseEdit} maxWidth="xs" fullWidth>

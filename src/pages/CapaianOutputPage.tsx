@@ -49,23 +49,15 @@ export default function CapaianOutputPage() {
       setLoading(true);
       const remoteData = await googleSheetsService.fetchCapaianOutput();
       
-      // If no data (likely because Apps Script isn't updated yet), show new mock data
       if (remoteData.length === 0) {
-        console.warn('Using new mock data for Capaian Output');
-        setData([
-          { kode: 'BAH.060 Penguatan Pengelolaan Layanan Publik', komponen: '', target: '', timKerja: '', keterangan: '', realisasi: {}, isHeader: true },
-          { kode: 'BAH.060.051', komponen: 'Penilaian Kepatuhan Interaksi Layanan Publik', target: '2 Dokumen', timKerja: 'Penguatan Pelayanan Publik', keterangan: 'Progres Survei Kepatuhan', realisasi: { jan: 'Belum Terlaksana', feb: 'Belum Terlaksana' } },
-          { kode: 'BAH.060.052', komponen: 'Penyelenggaraan Pengelolaan Perpustakaan', target: '2 Dokumen', timKerja: 'Pengelolaan Perpustakaan', keterangan: 'Pengelolaan Perpustakaan Offline dan Online', realisasi: { jan: 'Kunjungan offline: 173 pemustaka\nKunjungan online: 2295 pemustaka', feb: 'Kunjungan offline: 218 pemustaka\nKunjungan online: 2708 pemustaka' } },
-          { kode: 'EBA.958 Layanan Hubungan Masyarakat dan Informasi', komponen: '', target: '', timKerja: '', keterangan: '', realisasi: {}, isHeader: true },
-          { kode: 'EBA.958.051', komponen: 'Koordinasi Pendampingan dan Peliputan', target: '2 Dokumen', timKerja: 'Dukungan Manajemen', keterangan: 'Koordinasi Lintas Program', realisasi: { jan: 'Belum terlaksana' } },
-          { kode: 'EBA.958.051', komponen: 'Peliputan dan Dokumentasi', target: '', timKerja: 'Peliputan dan Publikasi', keterangan: 'Kegiatan Reportase', realisasi: { jan: 'Rilis 46, Album Flickr 96', feb: 'Rilis 32, Album Flickr 66' } },
-        ]);
+        setError('Data kosong atau gagal terhubung ke Google Sheets. Pastikan data di spreadsheet sudah terisi.');
+        setData([]);
       } else {
         setData(remoteData);
+        setError(null);
       }
-      setError(null);
     } catch (err) {
-      setError('Gagal mengambil data. Pastikan Apps Script sudah diperbarui.');
+      setError('Gagal mengambil data. Pastikan koneksi internet stabil dan Apps Script sudah benar.');
       console.error(err);
     } finally {
       setLoading(false);
