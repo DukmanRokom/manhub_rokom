@@ -76,6 +76,7 @@ export const navItems: NavItem[] = [
     children: [
       { label: 'Usulan Perencanaan', path: '/perencanaan/usulan', icon: AssignmentIcon },
       { label: 'Usulan Revisi', path: '/perencanaan/revisi', icon: AssignmentIcon },
+      { label: 'Hibah', path: '/perencanaan/hibah', icon: AssignmentIcon },
     ],
   },
 ];

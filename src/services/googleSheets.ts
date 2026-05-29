@@ -5,6 +5,7 @@ const PERENCANAAN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw9y_qL1Q
 // ← Ganti dengan URL Apps Script Google Sheet Pranata Humas setelah deploy
 const PRAHUM_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzWw1NkcVO3zAxGJ2juRJQlvglYvqbI9Ap_Av557P_XkAb9vY2xPROb-CcEEj0WI7xL/exec';
 const PUSTAKAWAN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw8y4lopbkmn_pptqOMmt7TpxojiQ0HRsdlxgFX_gT7dR99eviOPH9eXSFTg03YxLAcLg/exec';
+const HIBAH_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyCqebC4SUOJVO94egU-Uz0INl-dtFCndvdBaHCDCNlkgrTGUZ7HdExYfOxUZXJvFaOvA/exec';
 
 export interface PrahumData {
   id: number;
@@ -135,6 +136,101 @@ export interface ConfigData {
   key: string;
   value: string;
 }
+
+export interface HibahData {
+  no: number;
+  sumberDana: string;
+  jenisSumberDana: string;
+  komponenKegiatan: string;
+  '2026': number;
+  '2027': number;
+  '2028': number;
+  '2029': number;
+  '2030': number;
+  '2031': number;
+  pic: string;
+}
+
+export const MOCK_HIBAH_DATA: HibahData[] = [
+  {
+    no: 1,
+    sumberDana: 'World Bank',
+    jenisSumberDana: 'Luar Negeri',
+    komponenKegiatan: 'Penguatan Sistem Informasi Kesehatan Nasional (Sisnakes)',
+    '2026': 1500000000,
+    '2027': 2000000000,
+    '2028': 1800000000,
+    '2029': 1200000000,
+    '2030': 1000000000,
+    '2031': 500000000,
+    pic: 'Tim Kerja Data dan Informasi'
+  },
+  {
+    no: 2,
+    sumberDana: 'APBN (Rupiah Murni)',
+    jenisSumberDana: 'Dalam Negeri',
+    komponenKegiatan: 'Sosialisasi dan Kampanye Germas Terpadu',
+    '2026': 800000000,
+    '2027': 850000000,
+    '2028': 900000000,
+    '2029': 950000000,
+    '2030': 1000000000,
+    '2031': 1050000000,
+    pic: 'Tim Kerja Hubungan Masyarakat'
+  },
+  {
+    no: 3,
+    sumberDana: 'WHO (World Health Organization)',
+    jenisSumberDana: 'Luar Negeri',
+    komponenKegiatan: 'Bantuan Teknis Penanggulangan Penyakit Menular Menular',
+    '2026': 500000000,
+    '2027': 600000000,
+    '2028': 400000000,
+    '2029': 300000000,
+    '2030': 200000000,
+    '2031': 100000000,
+    pic: 'Tim Kerja Hubungan Luar Negeri'
+  },
+  {
+    no: 4,
+    sumberDana: 'USAID',
+    jenisSumberDana: 'Luar Negeri',
+    komponenKegiatan: 'Peningkatan Kapasitas SDM Pustakawan Kesehatan',
+    '2026': 1200000000,
+    '2027': 1100000000,
+    '2028': 950000000,
+    '2029': 800000000,
+    '2030': 600000000,
+    '2031': 400000000,
+    pic: 'Tim Kerja Perpustakaan'
+  },
+  {
+    no: 5,
+    sumberDana: 'Hibah Daerah DKI Jakarta',
+    jenisSumberDana: 'Dalam Negeri',
+    komponenKegiatan: 'Koordinasi Pelayanan Kesehatan Terintegrasi Daerah Penyangga',
+    '2026': 300000000,
+    '2027': 350000000,
+    '2028': 300000000,
+    '2029': 250000000,
+    '2030': 200000000,
+    '2031': 150000000,
+    pic: 'Tim Kerja Fasilitasi Pelayanan'
+  },
+  {
+    no: 6,
+    sumberDana: 'Global Fund',
+    jenisSumberDana: 'Luar Negeri',
+    komponenKegiatan: 'Pengadaan Sarana Pendukung Laboratorium Rujukan Nasional',
+    '2026': 3500000000,
+    '2027': 4000000000,
+    '2028': 3000000000,
+    '2029': 2500000000,
+    '2030': 2000000000,
+    '2031': 1000000000,
+    pic: 'Tim Kerja Layanan BMN'
+  }
+];
 
 /**
  * Converts a standard Google Drive sharing link to a direct download/view link
@@ -534,7 +630,7 @@ export const googleSheetsService = {
             nov: getVal(['november', 'nov', 'November']),
             des: getVal(['desember', 'des', 'Desember']),
           },
-          isHeader: item.isheader === true || item.isHeader === true || String(item.kode || '').length <= 10 && !item.komponen, 
+          isHeader: item.isheader === true || item.isHeader === true || String(item.kode || '').length <= 10 && !item.komponen,
         };
       });
     } catch (err) {
@@ -758,6 +854,71 @@ export const googleSheetsService = {
     } catch (err) {
       console.error('Error fetching Pustakawan data:', err);
       return [];
+    }
+  },
+
+  async fetchHibahData(): Promise<HibahData[]> {
+    if (!HIBAH_SHEET_URL || HIBAH_SHEET_URL.startsWith('PASTE_')) {
+      return MOCK_HIBAH_DATA;
+    }
+    try {
+      const cacheBuster = `&t=${Date.now()}`;
+      const resp = await fetch(`${HIBAH_SHEET_URL}?action=getHibah${cacheBuster}`);
+      const text = await resp.text();
+
+      if (text.includes('<!DOCTYPE html>') || text.includes('<html')) {
+        throw new Error('Respon Apps Script berupa HTML. Pastikan Web App dideploy dengan akses "Anyone" dan Anda telah melakukan otorisasi.');
+      }
+
+      let data: any;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        throw new Error('Gagal mengurai respon JSON dari Apps Script.');
+      }
+
+      if (data && data.error) {
+        throw new Error(data.error);
+      }
+
+      if (!Array.isArray(data)) {
+        throw new Error('Respon Apps Script bukan berupa array data.');
+      }
+
+      return data.map((item: any, idx: number) => {
+        const getVal = (keys: string[]) => {
+          for (const key of keys) {
+            if (item[key] !== undefined) return item[key];
+            const cleanKey = key.toLowerCase().replace(/\s+/g, '');
+            if (item[cleanKey] !== undefined) return item[cleanKey];
+          }
+          return '';
+        };
+
+        const getNum = (keys: string[]) => {
+          const val = getVal(keys);
+          if (val === undefined || val === null || val === '') return 0;
+          const parsed = Number(val.toString().replace(/[^0-9.-]/g, ''));
+          return isNaN(parsed) ? 0 : parsed;
+        };
+
+        return {
+          no: getNum(['no', 'No', 'no.']) || idx + 1,
+          sumberDana: String(getVal(['sumber dana', 'sumberdana', 'sumber_dana', 'Sumber Dana', 'SumberDana'])).trim(),
+          jenisSumberDana: String(getVal(['jenis sumber dana', 'jenissumberdana', 'jenis_sumber_dana', 'Jenis Sumber Dana', 'JenisSumberDana'])).trim(),
+          komponenKegiatan: String(getVal(['komponen kegiatan', 'komponenkegiatan', 'komponen_kegiatan', 'Komponen Kegiatan', 'KomponenKegiatan'])).trim(),
+          '2026': getNum(['2026']),
+          '2027': getNum(['2027']),
+          '2028': getNum(['2028']),
+          '2029': getNum(['2029']),
+          '2030': getNum(['2030']),
+          '2031': getNum(['2031']),
+          pic: String(getVal(['pic', 'Pic', 'PIC'])).trim(),
+        };
+      });
+    } catch (err: any) {
+      console.error('Error fetching Hibah data:', err);
+      throw err;
     }
   },
 };
