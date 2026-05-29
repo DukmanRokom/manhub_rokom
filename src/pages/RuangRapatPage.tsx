@@ -30,9 +30,8 @@ import SendIcon from '@mui/icons-material/Send';
 import { googleSheetsService, RoomBooking } from '../services/googleSheets';
 
 const RUANGAN_LIST = [
-  { id: 'naranta', name: 'Ruang Naranta', capacity: '20 Orang', color: '#1a73e8' },
-  { id: '104a', name: 'Ruang 104 A', capacity: '10 Orang', color: '#d93025' },
-  { id: '104b', name: 'Ruang 104 B', capacity: '15 Orang', color: '#188038' },
+  { id: 'ruang_rapat', name: 'Ruang Rapat', capacity: '10 Orang', color: '#1a73e8' },
+  { id: 'ruang_foto', name: 'Ruang Foto', capacity: '10 Orang', color: '#9c27b0' },
 ];
 
 const NAMA_PEMOHON = [
@@ -105,7 +104,7 @@ export default function RuangRapatPage() {
 
   useEffect(() => {
     fetchBookings();
-    
+
     // Auto-update status every minute (re-render)
     const timer = setInterval(() => {
       setNow(new Date());
@@ -202,19 +201,19 @@ export default function RuangRapatPage() {
           const nowHours = now.getHours();
           const nowMinutes = now.getMinutes();
           const currentTotalMinutes = nowHours * 60 + nowMinutes;
-          
+
           const isBookedNow = todayBookings.some(b => {
-             if (b.ruangan !== room.name) return false;
-             
-             const startMinutes = timeToMinutes(b.jammulai);
-             const endMinutes = timeToMinutes(b.jamselesai);
-             
-             // Check if current time is within range
-             return currentTotalMinutes >= startMinutes && currentTotalMinutes < endMinutes;
+            if (b.ruangan !== room.name) return false;
+
+            const startMinutes = timeToMinutes(b.jammulai);
+            const endMinutes = timeToMinutes(b.jamselesai);
+
+            // Check if current time is within range
+            return currentTotalMinutes >= startMinutes && currentTotalMinutes < endMinutes;
           });
 
           return (
-            <Grid item xs={12} md={4} key={room.id}>
+            <Grid item xs={12} md={6} key={room.id}>
               <Card sx={{ borderRadius: 4, borderTop: `6px solid ${room.color}`, boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
@@ -246,7 +245,7 @@ export default function RuangRapatPage() {
           <Typography variant="h6" sx={{ fontWeight: 800, mb: 3, color: 'primary.main' }}>
             Formulir Permohonan Ruangan
           </Typography>
-          
+
           <Box component="form" onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
@@ -263,7 +262,7 @@ export default function RuangRapatPage() {
                   ))}
                 </TextField>
               </Grid>
-              
+
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
@@ -341,10 +340,10 @@ export default function RuangRapatPage() {
               </Grid>
 
               <Grid item xs={12}>
-                <Button 
-                  type="submit" 
-                  variant="contained" 
-                  size="large" 
+                <Button
+                  type="submit"
+                  variant="contained"
+                  size="large"
                   fullWidth
                   disabled={submitting}
                   startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
@@ -435,16 +434,16 @@ export default function RuangRapatPage() {
       </Box>
 
       {/* Feedback Snackbar */}
-      <Snackbar 
-        open={snackbar.open} 
-        autoHideDuration={6000} 
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert 
-          onClose={() => setSnackbar({ ...snackbar, open: false })} 
-          severity={snackbar.severity} 
-          variant="filled" 
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          variant="filled"
           sx={{ width: '100%', borderRadius: 2, fontWeight: 600 }}
         >
           {snackbar.message}

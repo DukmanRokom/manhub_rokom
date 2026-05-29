@@ -40,7 +40,7 @@ export default function LakipPage() {
     nama: '',
     url: '',
   });
-  
+
   const [submitting, setSubmitting] = useState(false);
   const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 
@@ -118,7 +118,7 @@ export default function LakipPage() {
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box>
-          <Typography variant="h4" sx={{ fontWeight: 800, color: 'primary.main', mb: 1 }}>
+          <Typography variant="h4" sx={{ fontWeight: 800, color: "black", mb: 1 }}>
             LAKIP
           </Typography>
           <Typography variant="body1" color="text.secondary">
@@ -153,10 +153,10 @@ export default function LakipPage() {
         <Grid container spacing={3}>
           {data.map((item) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
-              <Card 
-                sx={{ 
-                  height: '100%', 
-                  display: 'flex', 
+              <Card
+                sx={{
+                  height: '100%',
+                  display: 'flex',
                   flexDirection: 'column',
                   position: 'relative',
                   overflow: 'hidden',
@@ -177,7 +177,7 @@ export default function LakipPage() {
                       component="img"
                       image={convertDriveLink(item.url)}
                       alt={item.nama}
-                      sx={{ 
+                      sx={{
                         position: 'absolute',
                         top: 0,
                         left: 0,
@@ -191,11 +191,11 @@ export default function LakipPage() {
                       }}
                     />
                   ) : null}
-                  
+
                   {/* Fallback Icon / State */}
-                  <Box 
+                  <Box
                     className="fallback"
-                    sx={{ 
+                    sx={{
                       display: item.url && item.url.includes('drive.google.com') ? 'none' : 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
@@ -213,7 +213,7 @@ export default function LakipPage() {
                       component="img"
                       src="/src/assets/lakip_fallback.png"
                       alt="Lakip"
-                      sx={{ 
+                      sx={{
                         width: '70%',
                         height: 'auto',
                         mb: 1,
@@ -223,10 +223,10 @@ export default function LakipPage() {
                         e.target.src = 'https://via.placeholder.com/300x424?text=LAKIP';
                       }}
                     />
-                    <Typography 
-                      variant="h5" 
-                      sx={{ 
-                        fontWeight: 900, 
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        fontWeight: 900,
                         color: 'primary.main',
                         letterSpacing: 1,
                         textTransform: 'uppercase',
@@ -242,9 +242,9 @@ export default function LakipPage() {
                       LAKIP
                     </Typography>
                   </Box>
-                  
+
                   {/* Overlay on hover */}
-                  <Box 
+                  <Box
                     className="overlay"
                     sx={{
                       position: 'absolute',
@@ -269,7 +269,7 @@ export default function LakipPage() {
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      sx={{ 
+                      sx={{
                         borderRadius: '20px',
                         background: '#fff',
                         color: 'primary.main',
@@ -301,13 +301,13 @@ export default function LakipPage() {
                   </Box>
 
                   {isLoggedIn && (
-                    <Box 
+                    <Box
                       className="actions"
-                      sx={{ 
-                        position: 'absolute', 
-                        bottom: 12, 
-                        right: 12, 
-                        display: 'flex', 
+                      sx={{
+                        position: 'absolute',
+                        bottom: 12,
+                        right: 12,
+                        display: 'flex',
                         gap: 1,
                         opacity: 0,
                         transition: 'opacity 0.2s',
@@ -315,18 +315,18 @@ export default function LakipPage() {
                       }}
                     >
                       <Tooltip title="Edit">
-                        <IconButton 
-                          size="small" 
-                          sx={{ background: '#fff', '&:hover': { background: '#f5f5f5' }, boxShadow: 2 }} 
+                        <IconButton
+                          size="small"
+                          sx={{ background: '#fff', '&:hover': { background: '#f5f5f5' }, boxShadow: 2 }}
                           onClick={(e) => { e.stopPropagation(); handleOpenEdit(item); }}
                         >
                           <EditIcon fontSize="small" color="primary" />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Hapus">
-                        <IconButton 
-                          size="small" 
-                          sx={{ background: '#fff', '&:hover': { background: '#f5f5f5' }, boxShadow: 2 }} 
+                        <IconButton
+                          size="small"
+                          sx={{ background: '#fff', '&:hover': { background: '#f5f5f5' }, boxShadow: 2 }}
                           onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }}
                         >
                           <DeleteIcon fontSize="small" color="error" />
@@ -348,9 +348,9 @@ export default function LakipPage() {
 
       {/* FAB for mobile add button */}
       {isLoggedIn && !loading && (
-        <Fab 
-          color="primary" 
-          aria-label="add" 
+        <Fab
+          color="primary"
+          aria-label="add"
           sx={{ position: 'fixed', bottom: 32, right: 32, display: { md: 'none' } }}
           onClick={handleOpenAdd}
         >
@@ -399,9 +399,9 @@ export default function LakipPage() {
         </DialogContent>
         <DialogActions sx={{ p: 3 }}>
           <Button onClick={handleCloseDialog} color="inherit">Batal</Button>
-          <Button 
-            onClick={handleSubmit} 
-            variant="contained" 
+          <Button
+            onClick={handleSubmit}
+            variant="contained"
             disabled={submitting || !formData.nama || !formData.url || !formData.tahun}
             startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : null}
             sx={{ px: 4, fontWeight: 700 }}
@@ -412,9 +412,9 @@ export default function LakipPage() {
       </Dialog>
 
       {/* Notifications */}
-      <Snackbar 
-        open={notification.open} 
-        autoHideDuration={4000} 
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={4000}
         onClose={() => setNotification({ ...notification, open: false })}
       >
         <Alert severity={notification.severity} sx={{ width: '100%', fontWeight: 600 }}>

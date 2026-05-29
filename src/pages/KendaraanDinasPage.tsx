@@ -154,7 +154,7 @@ export default function KendaraanDinasPage() {
             Formulir permohonan penggunaan kendaraan dinas operasional
           </Typography>
           <Typography sx={{ color: 'primary.main', fontSize: '0.875rem', fontWeight: 600, mt: 0.5 }}>
-            PIC : Abdul Suryadi
+            PIC : Galih Permana
           </Typography>
         </Box>
       </Box>
@@ -371,8 +371,8 @@ export default function KendaraanDinasPage() {
             </Typography>
             <Chip label="Live Data" size="small" color="success" variant="outlined" sx={{ fontWeight: 600, fontSize: '0.7rem' }} />
           </Box>
-          <Button 
-            startIcon={fetching ? <CircularProgress size={16} color="inherit" /> : <RefreshIcon />} 
+          <Button
+            startIcon={fetching ? <CircularProgress size={16} color="inherit" /> : <RefreshIcon />}
             onClick={fetchRequests}
             disabled={fetching}
             size="small"
@@ -413,7 +413,7 @@ export default function KendaraanDinasPage() {
                     <TableCell sx={{ fontWeight: 600 }}>{row.namapemohon}</TableCell>
                     <TableCell sx={{ fontSize: '0.85rem' }}>{row.unitkerja}</TableCell>
                     <TableCell>
-                       <Chip label={row.kendaraan} size="small" sx={{ fontWeight: 500, backgroundColor: '#e6fffa', color: '#006b63' }} />
+                      <Chip label={row.kendaraan} size="small" sx={{ fontWeight: 500, backgroundColor: '#e6fffa', color: '#006b63' }} />
                     </TableCell>
                     <TableCell sx={{ fontSize: '0.85rem' }}>
                       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
