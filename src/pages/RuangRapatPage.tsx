@@ -230,7 +230,7 @@ export default function RuangRapatPage() {
                     <Typography variant="body2">Kapasitas: {room.capacity}</Typography>
                   </Box>
                   <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                    Lokasi: Lantai 1, Gedung Ahdiyatma
+                    Lokasi: Lantai 11, Gedung Sujudi
                   </Typography>
                 </CardContent>
               </Card>
