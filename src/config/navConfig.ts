@@ -44,7 +44,8 @@ export const navItems: NavItem[] = [
       { label: 'Rekap Absensi', path: '/kehadiran/rekap', icon: AccessTimeIcon },
       { label: 'Pengajuan Lembur', path: '/kehadiran/lembur', icon: AssignmentIcon },
       { label: 'Data Pegawai', path: '/sdm/pegawai', icon: BadgeIcon },
-      { label: 'Katalog Indikator Kinerja', path: '/sdm/katalog-iki', icon: MenuBookIcon,
+      {
+        label: 'Katalog Indikator Kinerja', path: '/sdm/katalog-iki', icon: MenuBookIcon,
         children: [
           { label: 'Pranata Humas', path: '/sdm/katalog-iki/prahum', icon: GroupsIcon },
           { label: 'Pustakawan', path: '/sdm/katalog-iki/pustakawan', icon: GroupsIcon },
@@ -76,7 +77,7 @@ export const navItems: NavItem[] = [
     children: [
       { label: 'Usulan Perencanaan', path: '/perencanaan/usulan', icon: AssignmentIcon },
       { label: 'Usulan Revisi', path: '/perencanaan/revisi', icon: AssignmentIcon },
-      { label: 'Hibah', path: '/perencanaan/hibah', icon: AssignmentIcon },
+      { label: 'Usulan Hibah', path: '/perencanaan/hibah', icon: AssignmentIcon },
     ],
   },
 ];
