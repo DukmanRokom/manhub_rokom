@@ -1,14 +1,11 @@
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzB680czLYiEsvsb4G1ES4SrGId2hWNNr-TlPtlR9Bhx9-roA-v_rqGvQgybdPRPXVkWg/exec';
+﻿const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzB680czLYiEsvsb4G1ES4SrGId2hWNNr-TlPtlR9Bhx9-roA-v_rqGvQgybdPRPXVkWg/exec';
 const CAPUT_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzy6UMw3II2Rarcr1-Dn5FSA90sSwS3mY-_DUC0wLjykO8wHsCouNmEewMw2vo2JgZkPQ/exec';
 const SPJ_SHEET_URL = 'https://script.google.com/macros/s/AKfycbwOFkrFOPEOQEg4krZJv30GG7T7HA-5C4fa7h23iTkWFn_OBrIKoVpc0mlnz7p70loj/exec';
 const PERENCANAAN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw9y_qL1QshwVaH9SEHbA1tUwvGWP5fYXbxGmLnLnCX9QS2iZ4XrDwlHEn_zr4oQsIB/exec';
+// ΓåÉ Ganti dengan URL Apps Script Google Sheet Pranata Humas setelah deploy
 const PRAHUM_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzWw1NkcVO3zAxGJ2juRJQlvglYvqbI9Ap_Av557P_XkAb9vY2xPROb-CcEEj0WI7xL/exec';
 const PUSTAKAWAN_SHEET_URL = 'https://script.google.com/macros/s/AKfycbw8y4lopbkmn_pptqOMmt7TpxojiQ0HRsdlxgFX_gT7dR99eviOPH9eXSFTg03YxLAcLg/exec';
 const HIBAH_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyCqebC4SUOJVO94egU-Uz0INl-dtFCndvdBaHCDCNlkgrTGUZ7HdExYfOxUZXJvFaOvA/exec';
-
-// Risiko sheet - uses Google Visualization API directly
-const RISIKO_SHEET_ID = '1KZHet5j0RvmDdDoP-7eIiwBynu-gLzXZDBEqFfIFN1Q';
-const RISIKO_SHEET_URL = `https://docs.google.com/spreadsheets/d/${RISIKO_SHEET_ID}/gviz/tq?tqx=out:json&sheet=risiko&headers=1`;
 
 export interface PrahumData {
   id: number;
@@ -93,7 +90,7 @@ export interface AtkRequest {
   jumlah: number;
   satuan: string;
   keterangan: string;
-  items?: AtkRequestItem[];
+  items?: AtkRequestItem[]; // Added for bulk support
 }
 
 export interface AtkRequestItem {
@@ -154,16 +151,6 @@ export interface HibahData {
   pic: string;
 }
 
-export interface RiskData {
-  unitKerjaPemilikRisiko: string; // fetched but hidden in UI
-  uraianRisiko: string;
-  kodeRisiko: string;
-  tingkatRisikoSebelum: string;
-  uraianRencana: string;
-  tingkatRisikoSetelah: string;
-  kesimpulan: string;
-}
-
 export const MOCK_HIBAH_DATA: HibahData[] = [
   {
     no: 1,
@@ -195,7 +182,7 @@ export const MOCK_HIBAH_DATA: HibahData[] = [
     no: 3,
     sumberDana: 'WHO (World Health Organization)',
     jenisSumberDana: 'Luar Negeri',
-    komponenKegiatan: 'Bantuan Teknis Penanggulangan Penyakit Menular',
+    komponenKegiatan: 'Bantuan Teknis Penanggulangan Penyakit Menular Menular',
     '2026': 500000000,
     '2027': 600000000,
     '2028': 400000000,
@@ -246,23 +233,30 @@ export const MOCK_HIBAH_DATA: HibahData[] = [
 ];
 
 /**
- * Converts a standard Google Drive sharing link to a direct download/view link.
+ * Converts a standard Google Drive sharing link to a direct download/view link
+ * so it can be used in <img> tags.
  */
 export const convertDriveLink = (url: string): string => {
   if (!url) return '';
   const cleanUrl = url.trim();
   if (cleanUrl.includes('drive.google.com')) {
     let fileId = '';
+
+    // Pattern 1: /file/d/[ID]/view
     const matchD = cleanUrl.match(/\/d\/([^/?]+)/);
     if (matchD && matchD[1]) {
       fileId = matchD[1];
     } else {
+      // Pattern 2: id=[ID]
       const matchId = cleanUrl.match(/[?&]id=([^&]+)/);
       if (matchId && matchId[1]) {
         fileId = matchId[1];
       }
     }
+
     if (fileId) {
+      // sz=w600 is for width, sz=s1000 is for max dimension. 
+      // Sometimes sz=w600 is more reliable for quick loading.
       return `https://drive.google.com/thumbnail?id=${fileId}&sz=w600`;
     }
   }
@@ -270,16 +264,19 @@ export const convertDriveLink = (url: string): string => {
 };
 
 /**
- * Formats a Google Sheets time string to "HH:mm" format.
+ * Formats a Google Sheets time string (e.g., "1899-12-30T02:00:00.000Z")
+ * to a simple "HH:mm" format.
  */
 export const formatTime = (timeStr: string | number | undefined): string => {
   if (!timeStr) return '';
   if (typeof timeStr === 'number') {
+    // Convert Excel fractional day back to hours and minutes
     const totalMinutes = Math.round(timeStr * 24 * 60);
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   }
+
   if (typeof timeStr === 'string' && timeStr.includes('T')) {
     const date = new Date(timeStr);
     if (!isNaN(date.getTime())) {
@@ -288,6 +285,7 @@ export const formatTime = (timeStr: string | number | undefined): string => {
       return `${h}:${m}`;
     }
   }
+
   return timeStr.toString();
 };
 
@@ -333,8 +331,13 @@ export const googleSheetsService = {
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'addBudget', ...item }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'addBudget',
+        ...item
+      }),
     });
   },
 
@@ -342,28 +345,47 @@ export const googleSheetsService = {
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'deleteBudget', id }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'deleteBudget',
+        id: id
+      }),
     });
   },
 
   async fetchEotmData(): Promise<EotmData[]> {
     try {
+      // Add a timestamp to bypass browser cache
       const cacheBuster = `&t=${Date.now()}`;
       const resp = await fetch(`${SHEET_URL}?action=getEotm${cacheBuster}`);
       const text = await resp.text();
+
       try {
         const data = JSON.parse(text);
-        if (data.error) { console.error('Apps Script Error:', data.error); return []; }
+        if (data.error) {
+          console.error('Apps Script Error:', data.error);
+          return [];
+        }
         return data
-          .filter((item: any) => item.nama || item.Nama)
-          .map((item: any) => ({
-            id: Number(item.id || item.ID || 0),
-            fotoUrl: (item.fotoUrl || item.fotourl || '').toString().trim(),
-            periode: (item.periode || item.Periode || '').toString().trim(),
-            nama: (item.nama || item.Nama || '').toString().trim(),
-            jabatan: (item.jabatan || item.Jabatan || '').toString().trim(),
-          })).reverse().slice(0, 10);
+          .filter((item: any) => item.nama || item.Nama) // Filter out empty rows
+          .map((item: any) => {
+            // Apps Script v3 currently lowercases all headers, so check both cases
+            const rawUrl = (item.fotoUrl || item.fotourl || '').toString().trim();
+            const rawPeriode = (item.periode || item.Periode || '').toString().trim();
+            const rawNama = (item.nama || item.Nama || '').toString().trim();
+            const rawJabatan = (item.jabatan || item.Jabatan || '').toString().trim();
+            const rawId = item.id || item.ID || 0;
+
+            return {
+              id: Number(rawId),
+              fotoUrl: rawUrl,
+              periode: rawPeriode,
+              nama: rawNama,
+              jabatan: rawJabatan,
+            };
+          }).reverse().slice(0, 10);
       } catch (e) {
         console.error('Invalid JSON from Google Sheets. Raw response:', text);
         return [];
@@ -378,8 +400,13 @@ export const googleSheetsService = {
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'addEotm', ...item }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'addEotm',
+        ...item
+      }),
     });
   },
 
@@ -387,8 +414,13 @@ export const googleSheetsService = {
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'updateEotm', ...item }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'updateEotm',
+        ...item
+      }),
     });
   },
 
@@ -396,8 +428,13 @@ export const googleSheetsService = {
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'deleteEotm', id }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'deleteEotm',
+        id: id
+      }),
     });
   },
 
@@ -405,12 +442,14 @@ export const googleSheetsService = {
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         action: 'addVehicleRequest',
         ...item,
         timestamp: new Date().toISOString(),
-        Timestamp: new Date().toISOString(),
+        Timestamp: new Date().toISOString() // Try both cases for compatibility
       }),
     });
   },
@@ -478,12 +517,14 @@ export const googleSheetsService = {
       await fetch(SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           action: 'addRoomBooking',
           ...item,
           timestamp: new Date().toISOString(),
-          Timestamp: new Date().toISOString(),
+          Timestamp: new Date().toISOString() // Try both cases for compatibility
         }),
       });
     } catch (err) {
@@ -514,12 +555,14 @@ export const googleSheetsService = {
       await fetch(SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           action: 'addAtkRequest',
           ...item,
           timestamp: new Date().toISOString(),
-          Timestamp: new Date().toISOString(),
+          Timestamp: new Date().toISOString() // Try both cases for compatibility
         }),
       });
     } catch (err) {
@@ -554,8 +597,11 @@ export const googleSheetsService = {
       const cacheBuster = `&t=${Date.now()}`;
       const resp = await fetch(`${CAPUT_SHEET_URL}?action=getCapaianOutput${cacheBuster}`);
       const data = await resp.json();
+
       if (!Array.isArray(data)) return [];
+
       return data.map((item: any) => {
+        // Robust mapping for varying header cases from Apps Script
         const getVal = (keys: string[]) => {
           for (const key of keys) {
             if (item[key] !== undefined) return item[key];
@@ -563,6 +609,7 @@ export const googleSheetsService = {
           }
           return '';
         };
+
         return {
           kode: String(getVal(['kode', 'Kode', 'Mata Anggaran'])).trim(),
           komponen: String(getVal(['komponen', 'Komponen', 'Komponen Kegiatan'])).trim(),
@@ -583,7 +630,7 @@ export const googleSheetsService = {
             nov: getVal(['november', 'nov', 'November']),
             des: getVal(['desember', 'des', 'Desember']),
           },
-          isHeader: item.isheader === true || item.isHeader === true || (String(item.kode || '').length <= 10 && !item.komponen),
+          isHeader: item.isheader === true || item.isHeader === true || String(item.kode || '').length <= 10 && !item.komponen,
         };
       });
     } catch (err) {
@@ -613,8 +660,13 @@ export const googleSheetsService = {
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'addLakip', ...item }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'addLakip',
+        ...item
+      }),
     });
   },
 
@@ -622,8 +674,13 @@ export const googleSheetsService = {
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'updateLakip', ...item }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'updateLakip',
+        ...item
+      }),
     });
   },
 
@@ -631,8 +688,13 @@ export const googleSheetsService = {
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'deleteLakip', id }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'deleteLakip',
+        id: id
+      }),
     });
   },
 
@@ -642,9 +704,13 @@ export const googleSheetsService = {
       const cacheBuster = `&t=${Date.now()}`;
       const resp = await fetch(`${SPJ_SHEET_URL}?action=getSpj${cacheBuster}`);
       const text = await resp.text();
+
       try {
         const data = JSON.parse(text);
-        if (!Array.isArray(data)) { console.error('SPJ Data is not an array:', data); return []; }
+        if (!Array.isArray(data)) {
+          console.error('SPJ Data is not an array:', data);
+          return [];
+        }
         return data.map((item: any) => ({
           untukpembayaran: (item.untukpembayaran || '').toString(),
           lokasi: (item.lokasi || '').toString(),
@@ -669,6 +735,7 @@ export const googleSheetsService = {
       const cacheBuster = `&t=${Date.now()}`;
       const resp = await fetch(`${PERENCANAAN_SHEET_URL}?action=getPerencanaan${cacheBuster}`);
       const text = await resp.text();
+
       try {
         const data = JSON.parse(text);
         if (!Array.isArray(data)) return [];
@@ -707,8 +774,13 @@ export const googleSheetsService = {
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'updateIpAsn', ...item }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'updateIpAsn',
+        ...item
+      }),
     });
   },
 
@@ -731,8 +803,14 @@ export const googleSheetsService = {
     await fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'updateConfig', key, value }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        action: 'updateConfig',
+        key,
+        value
+      }),
     });
   },
 
@@ -799,8 +877,13 @@ export const googleSheetsService = {
         throw new Error('Gagal mengurai respon JSON dari Apps Script.');
       }
 
-      if (data && data.error) throw new Error(data.error);
-      if (!Array.isArray(data)) throw new Error('Respon Apps Script bukan berupa array data.');
+      if (data && data.error) {
+        throw new Error(data.error);
+      }
+
+      if (!Array.isArray(data)) {
+        throw new Error('Respon Apps Script bukan berupa array data.');
+      }
 
       return data.map((item: any, idx: number) => {
         const getVal = (keys: string[]) => {
@@ -811,12 +894,14 @@ export const googleSheetsService = {
           }
           return '';
         };
+
         const getNum = (keys: string[]) => {
           const val = getVal(keys);
           if (val === undefined || val === null || val === '') return 0;
           const parsed = Number(val.toString().replace(/[^0-9.-]/g, ''));
           return isNaN(parsed) ? 0 : parsed;
         };
+
         return {
           no: getNum(['no', 'No', 'no.']) || idx + 1,
           sumberDana: String(getVal(['sumber dana', 'sumberdana', 'sumber_dana', 'Sumber Dana', 'SumberDana'])).trim(),
@@ -834,39 +919,6 @@ export const googleSheetsService = {
     } catch (err: any) {
       console.error('Error fetching Hibah data:', err);
       throw err;
-    }
-  },
-
-  /**
-   * Fetches Profil Risiko data from Google Sheet using Visualization API.
-   * Column "Unit Kerja Pemilik Risiko" is fetched but hidden in the UI.
-   */
-  async fetchRiskData(): Promise<RiskData[]> {
-    try {
-      const cacheBuster = `&t=${Date.now()}`;
-      const response = await fetch(`${RISIKO_SHEET_URL}${cacheBuster}`);
-      const text = await response.text();
-      // Response starts with: google.visualization.Query.setResponse({...});
-      const jsonText = text.replace(/^[^{]*/, '').replace(/\);?\s*$/, '');
-      const data = JSON.parse(jsonText);
-      const rows = data.table?.rows || [];
-      return rows
-        .filter((row: any) => row.c && row.c[1]?.v) // skip empty rows
-        .map((row: any) => {
-          const c = row.c || [];
-          return {
-            unitKerjaPemilikRisiko: c[0]?.v?.toString().trim() || '',
-            uraianRisiko: c[1]?.v?.toString().trim() || '',
-            kodeRisiko: c[2]?.v?.toString().trim() || '',
-            tingkatRisikoSebelum: c[3]?.v?.toString().trim() || '',
-            uraianRencana: c[4]?.v?.toString().trim() || '',
-            tingkatRisikoSetelah: c[5]?.v?.toString().trim() || '',
-            kesimpulan: c[6]?.v?.toString().trim() || '',
-          } as RiskData;
-        });
-    } catch (err) {
-      console.error('Error fetching risk data:', err);
-      return [];
     }
   },
 };

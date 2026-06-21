@@ -23,6 +23,7 @@ import UsulanPerencanaanPage from './pages/UsulanPerencanaanPage';
 import UsulanRevisiPage from './pages/UsulanRevisiPage';
 import HibahPage from './pages/HibahPage';
 import DiagnosticPage from './pages/DiagnosticPage';
+import ProfilRisikoPage from './pages/ProfilRisikoPage';
 import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
               <Route path="monev/laporan-bulanan" element={<LaporanBulananPage />} />
               <Route path="monev/capaian-output" element={<CapaianOutputPage />} />
               <Route path="monev/lakip" element={<LakipPage />} />
+              <Route path="monev/profil-risiko" element={<ProfilRisikoPage />} />
               <Route path="sdm/pegawai" element={<DataPegawaiPage />} />
               <Route path="sdm/katalog-iki" element={<KatalogIkiPage />} />
               <Route path="sdm/katalog-iki/prahum" element={<KatalogIkiPrahumPage />} />

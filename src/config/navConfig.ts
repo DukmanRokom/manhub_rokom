@@ -13,6 +13,7 @@ import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import GroupsIcon from '@mui/icons-material/Groups';
+import SecurityIcon from '@mui/icons-material/Security';
 import { SvgIconComponent } from '@mui/icons-material';
 
 export interface NavItem {
@@ -69,6 +70,7 @@ export const navItems: NavItem[] = [
       { label: 'Capaian Output', path: '/monev/capaian-output', icon: TrendingUpIcon },
       { label: 'Laporan Bulanan', path: '/monev/laporan-bulanan', icon: SummarizeIcon },
       { label: 'LAKIP', path: '/monev/lakip', icon: AssignmentIcon },
+      { label: 'Profil Risiko', path: '/monev/profil-risiko', icon: SecurityIcon },
     ],
   },
   {
