@@ -182,14 +182,25 @@ export default function EotmPage() {
           </Typography>
         </Box>
         {isLoggedIn && (
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={handleOpenAdd}
-            sx={{ px: 3, fontWeight: 700 }}
-          >
-            Tambah EOTM
-          </Button>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button
+              variant="outlined"
+              href="https://docs.google.com/spreadsheets/d/1FrxJ4ajv90hLhyxRO-sp3m3oXFZJUMElYd7Ax4Suixg/edit?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ px: 3, fontWeight: 700 }}
+            >
+              Buka Spreadsheet
+            </Button>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={handleOpenAdd}
+              sx={{ px: 3, fontWeight: 700 }}
+            >
+              Tambah EOTM
+            </Button>
+          </Box>
         )}
       </Box>
 
