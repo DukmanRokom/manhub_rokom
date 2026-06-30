@@ -38,13 +38,13 @@ function FileCard({ file, isMaster = false }: { file: AttendanceFile, isMaster?:
   };
 
   return (
-    <Card 
+    <Card
       elevation={0}
-      sx={{ 
-        height: '100%', 
-        borderRadius: 6, 
+      sx={{
+        height: '100%',
+        borderRadius: 6,
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-        '&:hover': { 
+        '&:hover': {
           transform: 'translateY(-10px)',
           boxShadow: '0 25px 50px -12px rgba(0,0,0,0.08)',
           borderColor: '#60c0d0',
@@ -57,16 +57,16 @@ function FileCard({ file, isMaster = false }: { file: AttendanceFile, isMaster?:
         overflow: 'hidden'
       }}
     >
-      <CardActionArea 
+      <CardActionArea
         onClick={() => window.open(file.driveUrl, '_blank')}
         sx={{ height: '100%', p: 1 }}
       >
         <CardContent sx={{ p: 3 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
-            <Avatar 
+            <Avatar
               variant="rounded"
-              sx={{ 
-                bgcolor: '#ffffff', 
+              sx={{
+                bgcolor: '#ffffff',
                 border: '1px solid #f1f5f9',
                 width: 52,
                 height: 52,
@@ -76,28 +76,28 @@ function FileCard({ file, isMaster = false }: { file: AttendanceFile, isMaster?:
               {getFileIcon(file.fileType)}
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 0.5 }}>
-              <Chip 
-                label={file.fileType.toUpperCase()} 
-                size="small" 
-                sx={{ 
-                  fontSize: '0.6rem', 
-                  fontWeight: 900, 
+              <Chip
+                label={file.fileType.toUpperCase()}
+                size="small"
+                sx={{
+                  fontSize: '0.6rem',
+                  fontWeight: 900,
                   height: 18,
                   bgcolor: file.fileType === 'pdf' ? '#fff1f2' : '#f0fdf4',
                   color: file.fileType === 'pdf' ? '#e11d48' : '#166534',
-                }} 
+                }}
               />
               {isMaster && (
-                <Chip 
-                  label="UTAMA" 
-                  size="small" 
-                  sx={{ 
-                    fontSize: '0.6rem', 
-                    fontWeight: 900, 
+                <Chip
+                  label="UTAMA"
+                  size="small"
+                  sx={{
+                    fontSize: '0.6rem',
+                    fontWeight: 900,
                     height: 18,
                     bgcolor: '#00b8ac',
                     color: '#fff',
-                  }} 
+                  }}
                 />
               )}
             </Box>
@@ -113,10 +113,10 @@ function FileCard({ file, isMaster = false }: { file: AttendanceFile, isMaster?:
                 Update: {file.updatedAt}
               </Typography>
             </Box>
-            <Box 
+            <Box
               className="btn-arrow"
-              sx={{ 
-                opacity: 0.3, 
+              sx={{
+                opacity: 0.3,
                 transition: 'all 0.3s ease',
                 color: '#60c0d0'
               }}
@@ -171,21 +171,21 @@ export default function RekapAbsensiPage() {
   const groupedFiles = useMemo(() => {
     try {
       const groups: { [year: string]: { utama: AttendanceFile[], months: { [month: string]: AttendanceFile[] } } } = {};
-      
+
       if (!filteredFiles || !Array.isArray(filteredFiles) || filteredFiles.length === 0) return {};
 
       filteredFiles.forEach(file => {
         if (!file) return;
         const year = String(file.year || 'Tidak Diketahui');
         const month = String(file.month || 'Lainnya');
-        
+
         if (!groups[year]) {
           groups[year] = { utama: [], months: {} };
         }
-        
-        const isUtama = (month.toLowerCase().includes('utama')) || 
-                        (file.name?.toLowerCase().includes('master')) ||
-                        (file.name?.toLowerCase().includes('utama'));
+
+        const isUtama = (month.toLowerCase().includes('utama')) ||
+          (file.name?.toLowerCase().includes('master')) ||
+          (file.name?.toLowerCase().includes('utama'));
 
         if (isUtama) {
           groups[year].utama.push(file);
@@ -208,7 +208,7 @@ export default function RekapAbsensiPage() {
 
       const result = Object.keys(groups).sort((a, b) => b.localeCompare(a)).reduce((yearAcc, year) => {
         const { utama, months } = groups[year];
-        
+
         // Sort utama files by updatedAt descending
         const sortedUtama = [...utama].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
 
@@ -223,7 +223,7 @@ export default function RekapAbsensiPage() {
         };
         return yearAcc;
       }, {} as { [year: string]: { utama: AttendanceFile[], months: { [month: string]: AttendanceFile[] } } });
-      
+
       console.log('Grouped files calculation complete:', result);
       return result;
     } catch (err) {
@@ -250,7 +250,7 @@ export default function RekapAbsensiPage() {
       {/* Header & Description */}
       <Box sx={{ mb: 6 }}>
         <Typography variant="h3" sx={{ fontWeight: 900, color: 'text.primary', mb: 1, letterSpacing: '-1.5px' }}>
-          Rekap Absensi
+          Rekap Presensi
         </Typography>
         <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: 700, fontSize: '1.1rem', lineHeight: 1.6, mb: 3 }}>
           Pusat kendali laporan kehadiran. Data dikelompokkan secara cerdas untuk memudahkan monitoring dan akses cepat ke Google Drive.
@@ -258,7 +258,7 @@ export default function RekapAbsensiPage() {
 
         <Alert severity="warning" sx={{ borderRadius: 3, maxWidth: 800 }}>
           <AlertTitle sx={{ fontWeight: 700 }}>Peringatan Pemeriksaan Absensi</AlertTitle>
-          Dihimbau kepada seluruh pegawai agar dapat memeriksa absensi masing-masing <strong>maksimal di tanggal 5 setiap bulannya</strong>.
+          Dihimbau kepada seluruh pegawai agar dapat memeriksa data presensi masing-masing. Segala bentuk konfirmasi atas ketidaksesuaian data mohon disampaikan kepada bagian kepegawaian <strong>maksimal tanggal 5 setiap bulannya</strong>
         </Alert>
       </Box>
 
@@ -270,14 +270,14 @@ export default function RekapAbsensiPage() {
           { icon: <DateRangeIcon />, label: 'Sync Terakhir', val: stats.latestUpdate, color: '#8b5cf6', bg: '#f5f3ff' },
         ].map((item, idx) => (
           <Grid item xs={12} sm={4} md={4} key={idx}>
-            <Paper 
+            <Paper
               elevation={0}
-              sx={{ 
-                p: 3, 
-                borderRadius: 5, 
-                display: 'flex', 
+              sx={{
+                p: 3,
+                borderRadius: 5,
+                display: 'flex',
                 flexDirection: 'column',
-                gap: 1.5, 
+                gap: 1.5,
                 border: '1px solid #f1f5f9',
                 backgroundColor: 'rgba(255,255,255,0.7)',
                 backdropFilter: 'blur(10px)',
@@ -316,8 +316,8 @@ export default function RekapAbsensiPage() {
                   <SearchIcon sx={{ color: '#94a3b8' }} />
                 </InputAdornment>
               ),
-              sx: { 
-                borderRadius: 5, 
+              sx: {
+                borderRadius: 5,
                 backgroundColor: '#fff',
                 height: 64,
                 fontSize: '1.1rem',
@@ -330,11 +330,11 @@ export default function RekapAbsensiPage() {
         </Grid>
         <Grid item>
           <Tooltip title="Buka Folder Utama Google Drive">
-            <IconButton 
+            <IconButton
               onClick={() => window.open('https://drive.google.com/drive/folders/1k734sBm4OOxoZaRBTMnEG5S93aNj6Aa8', '_blank')}
-              sx={{ 
-                backgroundColor: '#60c0d0', 
-                color: '#fff', 
+              sx={{
+                backgroundColor: '#60c0d0',
+                color: '#fff',
                 borderRadius: 5,
                 width: 64,
                 height: 64,
@@ -390,13 +390,13 @@ export default function RekapAbsensiPage() {
                   <Typography variant="h6" sx={{ fontWeight: 800, color: 'text.primary' }}>
                     {month}
                   </Typography>
-                  <Chip 
-                    label={`${monthFiles.length} File`} 
-                    size="small" 
-                    sx={{ fontWeight: 700, bgcolor: '#f1f5f9', color: 'text.secondary', height: 20, fontSize: '0.65rem' }} 
+                  <Chip
+                    label={`${monthFiles.length} File`}
+                    size="small"
+                    sx={{ fontWeight: 700, bgcolor: '#f1f5f9', color: 'text.secondary', height: 20, fontSize: '0.65rem' }}
                   />
                 </Box>
-                
+
                 <Grid container spacing={3}>
                   {monthFiles.map((file) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={file.id}>
@@ -411,14 +411,14 @@ export default function RekapAbsensiPage() {
       )}
 
       {!loading && filteredFiles.length === 0 && (
-        <Paper 
+        <Paper
           elevation={0}
-          sx={{ 
-            textAlign: 'center', 
-            py: 15, 
-            borderRadius: 8, 
-            border: '2px dashed #e2e8f0', 
-            bgcolor: 'transparent' 
+          sx={{
+            textAlign: 'center',
+            py: 15,
+            borderRadius: 8,
+            border: '2px dashed #e2e8f0',
+            bgcolor: 'transparent'
           }}
         >
           <SearchIcon sx={{ fontSize: 60, color: '#cbd5e1', mb: 2 }} />
