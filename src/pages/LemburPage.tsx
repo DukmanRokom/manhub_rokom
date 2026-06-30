@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Grid, Card, CardContent, Divider } from '@mui/material';
+import { Box, Typography, Button, Grid, Card, CardContent, Divider, Alert, AlertTitle } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -38,11 +38,17 @@ export default function LemburPage() {
             px: 4,
             fontWeight: 700,
             fontSize: '1rem',
+            mb: 3
           }}
           onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLScppZAAlrHJI9I-KkcqZ6LkmeGjfAHLquIN8Z8KWGTV-nXoDg/viewform', '_blank')}
         >
           Buka Form Pengajuan Lembur
         </Button>
+
+        <Alert severity="warning" sx={{ borderRadius: 3, maxWidth: 800 }}>
+          <AlertTitle sx={{ fontWeight: 700 }}>Batas Waktu Pengisian Lembur</AlertTitle>
+          Dihimbau kepada seluruh pegawai agar dapat mengisi form data lembur <strong>maksimal di tanggal 5 setiap bulannya</strong>.
+        </Alert>
       </Box>
 
       {/* Info Alert */}
