@@ -13,6 +13,8 @@ import {
   Tooltip,
   Paper,
   Divider,
+  Alert,
+  AlertTitle,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
@@ -250,9 +252,14 @@ export default function RekapAbsensiPage() {
         <Typography variant="h3" sx={{ fontWeight: 900, color: 'text.primary', mb: 1, letterSpacing: '-1.5px' }}>
           Rekap Absensi
         </Typography>
-        <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: 700, fontSize: '1.1rem', lineHeight: 1.6 }}>
+        <Typography variant="body1" sx={{ color: 'text.secondary', maxWidth: 700, fontSize: '1.1rem', lineHeight: 1.6, mb: 3 }}>
           Pusat kendali laporan kehadiran. Data dikelompokkan secara cerdas untuk memudahkan monitoring dan akses cepat ke Google Drive.
         </Typography>
+
+        <Alert severity="warning" sx={{ borderRadius: 3, maxWidth: 800 }}>
+          <AlertTitle sx={{ fontWeight: 700 }}>Peringatan Pemeriksaan Absensi</AlertTitle>
+          Dihimbau kepada seluruh pegawai agar dapat memeriksa absensi masing-masing <strong>maksimal di tanggal 5 setiap bulannya</strong>.
+        </Alert>
       </Box>
 
       {/* Stats Section */}
