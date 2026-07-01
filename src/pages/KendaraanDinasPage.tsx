@@ -154,7 +154,7 @@ export default function KendaraanDinasPage() {
             Formulir permohonan penggunaan kendaraan dinas operasional
           </Typography>
           <Typography sx={{ color: 'primary.main', fontSize: '0.875rem', fontWeight: 600, mt: 0.5 }}>
-            PIC : Galih Permana
+            PIC : Zahrudin (Amin)
           </Typography>
         </Box>
       </Box>

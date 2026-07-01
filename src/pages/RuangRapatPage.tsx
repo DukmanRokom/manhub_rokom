@@ -30,8 +30,8 @@ import SendIcon from '@mui/icons-material/Send';
 import { googleSheetsService, RoomBooking } from '../services/googleSheets';
 
 const RUANGAN_LIST = [
-  { id: 'ruang_rapat', name: 'Ruang Rapat', capacity: '10 Orang', color: '#1a73e8' },
-  { id: 'ruang_foto', name: 'Ruang Foto', capacity: '10 Orang', color: '#9c27b0' },
+  { id: 'ruang_rapat_A', name: 'Ruang Rapat A', capacity: '10 Orang', color: '#1a73e8' },
+  { id: 'ruang_rapat_B', name: 'Ruang Rapat B', capacity: '10 Orang', color: '#9c27b0' },
 ];
 
 const NAMA_PEMOHON = [
