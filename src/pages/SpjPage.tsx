@@ -98,6 +98,9 @@ export default function SpjPage() {
             <Typography variant="body1" color="text.secondary">
               Surat Pertanggung Jawaban - Biro Komunikasi dan Informasi Publik
             </Typography>
+            <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.secondary', mt: 0.5 }}>
+              PIC : Ayu Isnawati dan Mochamad Nur Prasetyo
+            </Typography>
           </Box>
         </Box>
         <Tooltip title="Refresh Data">
