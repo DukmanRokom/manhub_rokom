@@ -12,6 +12,7 @@ import {
   IconButton,
   Tooltip,
   Paper,
+  Button,
   Divider,
   Alert,
   AlertTitle,
@@ -328,7 +329,41 @@ export default function RekapAbsensiPage() {
             }}
           />
         </Grid>
-        <Grid item>
+        <Grid item sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <Button
+            variant="contained"
+            onClick={() => window.open('https://forms.gle/QxqoWWQAEAbEWK2n9', '_blank')}
+            sx={{
+              backgroundColor: '#00b8ac',
+              color: '#fff',
+              borderRadius: 5,
+              height: 64,
+              px: 3,
+              fontWeight: 700,
+              boxShadow: '0 8px 20px rgba(0, 184, 172, 0.3)',
+              '&:hover': { backgroundColor: '#009a90', transform: 'scale(1.02)' },
+              transition: 'all 0.3s ease'
+            }}
+          >
+            Backup Presensi Manual
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSdo4vWobl5lFUibwp4Kit-HTOSsOuJIQNSk8Pa4mRUMeIs7VQ/viewform', '_blank')}
+            sx={{
+              backgroundColor: '#1565c0',
+              color: '#fff',
+              borderRadius: 5,
+              height: 64,
+              px: 3,
+              fontWeight: 700,
+              boxShadow: '0 8px 20px rgba(21, 101, 192, 0.3)',
+              '&:hover': { backgroundColor: '#0d47a1', transform: 'scale(1.02)' },
+              transition: 'all 0.3s ease'
+            }}
+          >
+            Backup Foto Gate
+          </Button>
           <Tooltip title="Buka Folder Utama Google Drive">
             <IconButton
               onClick={() => window.open('https://drive.google.com/drive/folders/1k734sBm4OOxoZaRBTMnEG5S93aNj6Aa8', '_blank')}

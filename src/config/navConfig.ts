@@ -42,7 +42,7 @@ export const navItems: NavItem[] = [
     label: 'Kepegawaian',
     icon: BadgeIcon,
     children: [
-      { label: 'Rekap Absensi', path: '/kehadiran/rekap', icon: AccessTimeIcon },
+      { label: 'Rekap Presensi', path: '/kehadiran/rekap', icon: AccessTimeIcon },
       { label: 'Pengajuan Lembur', path: '/kehadiran/lembur', icon: AssignmentIcon },
       { label: 'Data Pegawai', path: '/sdm/pegawai', icon: BadgeIcon },
       {

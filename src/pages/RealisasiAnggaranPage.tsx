@@ -294,10 +294,10 @@ export default function RealisasiAnggaranPage() {
         <Grid item xs={12} md={4}>
           <Card sx={{ backgroundColor: '#60c0d0', border: 'none', boxShadow: 'none' }}>
             <CardContent>
-              <Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: 'text.secondary', mb: 1 }}>
+              <Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: 'rgba(255, 255, 255, 0.9)', mb: 1 }}>
                 Total Anggaran
               </Typography>
-              <Typography variant="h5" sx={{ fontWeight: 800, color: '#00b8ac' }}>
+              <Typography variant="h5" sx={{ fontWeight: 800, color: '#fff' }}>
                 {formatCurrency(stats.totalAnggaran)}
               </Typography>
             </CardContent>
@@ -328,6 +328,12 @@ export default function RealisasiAnggaranPage() {
           </Card>
         </Grid>
       </Grid>
+
+      <Box sx={{ mt: 4, textAlign: 'center' }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+          * Data diperbaharui setiap minggunya
+        </Typography>
+      </Box>
     </Box>
   );
 }

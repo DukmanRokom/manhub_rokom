@@ -136,7 +136,7 @@ export default function Dashboard() {
 
   const loadData = async () => {
     setLoading(true);
-    
+
     // Load Budget Data
     try {
       const budgetResult = await googleSheetsService.fetchData();
@@ -221,7 +221,7 @@ export default function Dashboard() {
     return data.map(item => {
       const percentRealisasi = item.anggaran > 0 ? (item.realisasi / item.anggaran) * 100 : 0;
       const percentSisa = Math.max(0, 100 - percentRealisasi);
-      
+
       return {
         name: item.kegiatan, // No truncation
         fullName: item.kegiatan,
@@ -324,12 +324,12 @@ export default function Dashboard() {
                 }}
                 id="btn-rekap-absensi"
               >
-                Rekap Absensi
+                Rekap Presensi
               </Button>
               <Button
                 variant="outlined"
-                startIcon={<DescriptionIcon />}
-                onClick={() => navigate('/kehadiran/lembur')}
+                startIcon={<StarIcon />}
+                onClick={() => navigate('/sdm/eotm')}
                 sx={{
                   borderColor: 'rgba(255,255,255,0.6)',
                   color: '#fff',
@@ -340,9 +340,9 @@ export default function Dashboard() {
                     background: 'rgba(255,255,255,0.1)',
                   },
                 }}
-                id="btn-ajukan-lembur"
+                id="btn-vote-eotm"
               >
-                Ajukan Lembur
+                Vote EOTM
               </Button>
             </Box>
           </Grid>
@@ -556,25 +556,25 @@ export default function Dashboard() {
                       </Typography>
                       <Box component="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
                         {card.items.map((item, idx) => (
-                          <Box 
-                            component="li" 
-                            key={idx} 
-                            sx={{ 
-                              display: 'flex', 
-                              alignItems: 'flex-start', 
-                              gap: 1, 
-                              mb: idx === card.items.length - 1 ? 0 : 1 
+                          <Box
+                            component="li"
+                            key={idx}
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                              gap: 1,
+                              mb: idx === card.items.length - 1 ? 0 : 1
                             }}
                           >
-                            <Box 
-                              sx={{ 
-                                width: 4, 
-                                height: 4, 
-                                borderRadius: '50%', 
-                                background: card.color, 
+                            <Box
+                              sx={{
+                                width: 4,
+                                height: 4,
+                                borderRadius: '50%',
+                                background: card.color,
                                 mt: 1,
-                                flexShrink: 0 
-                              }} 
+                                flexShrink: 0
+                              }}
                             />
                             <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', lineHeight: 1.4 }}>
                               {item}
@@ -711,9 +711,9 @@ export default function Dashboard() {
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <Button 
-              size="small" 
-              startIcon={<SyncIcon />} 
+            <Button
+              size="small"
+              startIcon={<SyncIcon />}
               onClick={loadData}
               disabled={loading}
               sx={{ mr: 1 }}
@@ -736,30 +736,30 @@ export default function Dashboard() {
           <>
             <Box sx={{ height: Math.max(400, data.length * 100), width: '100%', mb: 4 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart 
-                  data={chartData} 
+                <BarChart
+                  data={chartData}
                   layout="vertical"
                   margin={{ top: 10, right: 30, left: 30, bottom: 20 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
-                  <XAxis 
+                  <XAxis
                     type="number"
                     domain={[0, 100]}
                     tickFormatter={(v) => `${v}%`}
                     tick={{ fontSize: 10 }}
                   />
-                  <YAxis 
+                  <YAxis
                     type="category"
                     dataKey="name"
                     tick={(props: any) => {
                       const { x, y, payload } = props;
                       const text = payload.value || '';
-                      
+
                       // Simple wrapping logic
                       const words = text.split(' ');
                       const lines: string[] = [];
                       let currentLine = '';
-                      
+
                       words.forEach((word: string) => {
                         if ((currentLine + word).length > 25) {
                           lines.push(currentLine.trim());
@@ -769,18 +769,18 @@ export default function Dashboard() {
                         }
                       });
                       lines.push(currentLine.trim());
-                      
+
                       // Max 4 lines as requested
                       const displayLines = lines.slice(0, 4);
-                      
+
                       return (
                         <g transform={`translate(${x},${y})`}>
-                          <text 
-                            x={0} 
-                            y={0} 
-                            dy={-(displayLines.length - 1) * 6} 
-                            textAnchor="end" 
-                            fill="#666" 
+                          <text
+                            x={0}
+                            y={0}
+                            dy={-(displayLines.length - 1) * 6}
+                            textAnchor="end"
+                            fill="#666"
                             style={{ fontSize: 10, fontWeight: 700 }}
                           >
                             {displayLines.map((line, index) => (
@@ -794,7 +794,7 @@ export default function Dashboard() {
                     }}
                     width={180}
                   />
-                  <RechartsTooltip 
+                  <RechartsTooltip
                     formatter={(_value: any, name: string, props: any) => {
                       if (name === 'Alokasi') return [formatCurrency(props.payload.AnggaranAbs - props.payload.RealisasiAbs), 'Sisa Anggaran'];
                       return [formatCurrency(props.payload.RealisasiAbs), 'Realisasi'];
@@ -804,19 +804,19 @@ export default function Dashboard() {
                   />
                   <Legend verticalAlign="top" height={36} align="right" />
                   <Bar dataKey="Realisasi" name="Realisasi" stackId="a" fill="#00b8ac" barSize={25}>
-                    <LabelList 
-                      dataKey="Realisasi" 
-                      position="bottom" 
-                      formatter={(v: number) => v > 10 ? `${v.toFixed(0)}%` : ''} 
+                    <LabelList
+                      dataKey="Realisasi"
+                      position="bottom"
+                      formatter={(v: number) => v > 10 ? `${v.toFixed(0)}%` : ''}
                       style={{ fontSize: 9, fill: '#fff', fontWeight: 700 }}
                       offset={-14}
                     />
                   </Bar>
                   <Bar dataKey="Sisa" name="Alokasi" stackId="a" fill="#60c0d0" radius={[0, 4, 4, 0]} barSize={25}>
-                    <LabelList 
-                      dataKey="Sisa" 
-                      position="insideRight" 
-                      formatter={(v: number) => v > 10 ? `${v.toFixed(0)}%` : ''} 
+                    <LabelList
+                      dataKey="Sisa"
+                      position="insideRight"
+                      formatter={(v: number) => v > 10 ? `${v.toFixed(0)}%` : ''}
                       style={{ fontSize: 9, fill: '#006b63', fontWeight: 600 }}
                       offset={10}
                     />
@@ -828,7 +828,7 @@ export default function Dashboard() {
             <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 700, px: 1 }}>
               Rincian Kegiatan:
             </Typography>
-            
+
             <TableContainer component={Box} sx={{ border: '1px solid #f1f5f9', borderRadius: 2, mb: 2 }}>
               <Table size="small">
                 <TableHead sx={{ backgroundColor: '#f8fafc' }}>
@@ -856,11 +856,11 @@ export default function Dashboard() {
                 </TableBody>
               </Table>
             </TableContainer>
-            
+
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-              <Button 
-                variant="text" 
-                size="small" 
+              <Button
+                variant="text"
+                size="small"
                 onClick={() => navigate('/keuangan/realisasi')}
                 endIcon={<ArrowForwardIcon />}
                 sx={{ fontSize: '0.75rem' }}
@@ -873,13 +873,13 @@ export default function Dashboard() {
       </Paper>
 
       {/* ─── TIPS SECTION ─── */}
-      <Box 
-        sx={{ 
-          mt: 4, 
-          mb: 2, 
-          p: { xs: 2.5, md: 3 }, 
-          borderRadius: 4, 
-          background: 'linear-gradient(135deg, #e0f7f9 0%, #b2ebf2 100%)', 
+      <Box
+        sx={{
+          mt: 4,
+          mb: 2,
+          p: { xs: 2.5, md: 3 },
+          borderRadius: 4,
+          background: 'linear-gradient(135deg, #e0f7f9 0%, #b2ebf2 100%)',
           border: '1px solid #80deea',
           boxShadow: '0 4px 20px rgba(0, 184, 172, 0.08)',
           position: 'relative',
@@ -890,10 +890,10 @@ export default function Dashboard() {
           alignItems: 'flex-start'
         }}
       >
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
             justifyContent: 'center',
             pt: 0.5
           }}
@@ -902,12 +902,12 @@ export default function Dashboard() {
         </Box>
 
         <Box sx={{ flex: 1 }}>
-          <Typography 
-            variant="subtitle1" 
-            sx={{ 
-              fontWeight: 700, 
-              color: '#00796b', 
-              mb: 2, 
+          <Typography
+            variant="subtitle1"
+            sx={{
+              fontWeight: 700,
+              color: '#00796b',
+              mb: 2,
               fontSize: '1rem',
               letterSpacing: 0.2
             }}
@@ -922,22 +922,22 @@ export default function Dashboard() {
               'Gunakan tombol Refresh untuk pembaruan data secara manual.',
               'Pastikan jaringan internet stabil agar proses unggah data berjalan lancar.'
             ].map((tip, index) => (
-              <Box 
+              <Box
                 key={index}
-                sx={{ 
-                  display: 'flex', 
-                  alignItems: 'flex-start', 
+                sx={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
                   gap: 1.5,
                   transition: 'transform 0.2s',
                   '&:hover': { transform: 'translateX(4px)' }
                 }}
               >
                 <CheckIcon sx={{ color: '#00b8ac', fontSize: 18, mt: 0.3 }} />
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    color: '#004d40', 
-                    fontWeight: 500, 
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: '#004d40',
+                    fontWeight: 500,
                     lineHeight: 1.5,
                     fontSize: '0.9rem'
                   }}
@@ -974,9 +974,9 @@ export default function Dashboard() {
         </DialogContent>
         <DialogActions sx={{ p: 2.5 }}>
           <Button onClick={handleCloseEdit} color="inherit" sx={{ fontWeight: 600 }}>Batal</Button>
-          <Button 
-            onClick={handleSaveIpAsn} 
-            variant="contained" 
+          <Button
+            onClick={handleSaveIpAsn}
+            variant="contained"
             disabled={submitting || !editFormData.score || !editFormData.periode}
             sx={{ px: 3, fontWeight: 700 }}
           >
@@ -985,9 +985,9 @@ export default function Dashboard() {
         </DialogActions>
       </Dialog>
 
-      <Snackbar 
-        open={notification.open} 
-        autoHideDuration={6000} 
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
         onClose={() => setNotification({ ...notification, open: false })}
       >
         <Alert severity={notification.severity} sx={{ width: '100%', fontWeight: 600 }}>
