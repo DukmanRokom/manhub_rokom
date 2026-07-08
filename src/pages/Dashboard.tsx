@@ -60,6 +60,7 @@ import {
 } from '@mui/material';
 import { formatCurrency } from '../utils/format';
 import bannerPeople from '../assets/banner_people.png';
+import bannerPeople2 from '../assets/banner_people 2.png';
 
 const serviceCards = [
   {
@@ -127,6 +128,17 @@ export default function Dashboard() {
   const [eotmData, setEotmData] = useState<EotmData[]>([]);
   const [ipAsnData, setIpAsnData] = useState<IpAsnData | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Banner image rotating state
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const bannerImages = useMemo(() => [bannerPeople, bannerPeople2], []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % bannerImages.length);
+    }, 7000);
+    return () => clearInterval(interval);
+  }, [bannerImages.length]);
 
   // Edit State
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -347,22 +359,32 @@ export default function Dashboard() {
             </Box>
           </Grid>
           <Grid item xs={12} md={7} sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
-            <Box
-              component="img"
-              src={bannerPeople}
-              alt="Manhub Team"
-              sx={{
-                width: '100%',
-                maxWidth: 750,
-                height: 'auto',
-                filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.2)) drop-shadow(0 0 15px rgba(255,255,255,0.2))',
-                animation: 'float 6s ease-in-out infinite',
-                '@keyframes float': {
-                  '0%, 100%': { transform: 'translateY(0) scale(1)' },
-                  '50%': { transform: 'translateY(-15px) scale(1.02)' },
-                }
-              }}
-            />
+            <Box sx={{ position: 'relative', width: '100%', maxWidth: 750, display: 'flex', justifyContent: 'flex-end' }}>
+              {bannerImages.map((imgSrc, idx) => (
+                <Box
+                  key={idx}
+                  component="img"
+                  src={imgSrc}
+                  alt={`Manhub Team ${idx + 1}`}
+                  sx={{
+                    position: idx === 0 ? 'relative' : 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: '100%',
+                    maxWidth: 750,
+                    height: 'auto',
+                    opacity: currentImageIndex === idx ? 1 : 0,
+                    transition: 'opacity 1s ease-in-out',
+                    filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.2)) drop-shadow(0 0 15px rgba(255,255,255,0.2))',
+                    animation: 'float 6s ease-in-out infinite',
+                    '@keyframes float': {
+                      '0%, 100%': { transform: 'translateY(0) scale(1)' },
+                      '50%': { transform: 'translateY(-15px) scale(1.02)' },
+                    }
+                  }}
+                />
+              ))}
+            </Box>
           </Grid>
         </Grid>
       </Box>
