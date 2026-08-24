@@ -25,6 +25,8 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import DescriptionIcon from '@mui/icons-material/Description';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import StarIcon from '@mui/icons-material/Star';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -710,6 +712,95 @@ export default function Dashboard() {
           </Card>
         </Grid>
       </Grid>
+
+      {/* ─── GOOGLE CALENDAR ─── */}
+      <Paper
+        elevation={0}
+        sx={{
+          p: 3,
+          mb: 4,
+          borderRadius: 3,
+          border: '1px solid',
+          borderColor: 'divider',
+          background: '#fff',
+        }}
+      >
+        {/* Header */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #1a73e8 0%, #4285f4 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <CalendarMonthIcon sx={{ color: '#fff', fontSize: 22 }} />
+            </Box>
+            <Box>
+              <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary', lineHeight: 1.2 }}>
+                Kalender Tim
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.78rem' }}>
+                Jadwal kegiatan Tim Kerja Dukungan Manajemen
+              </Typography>
+            </Box>
+          </Box>
+          <Button
+            variant="outlined"
+            size="small"
+            endIcon={<OpenInNewIcon fontSize="small" />}
+            href="https://calendar.google.com/calendar/r?cid=01ac34223ea216df0a1629d6dbdff2a4b5bd55290becc5c85429c6a220105e50@group.calendar.google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            id="btn-open-google-calendar"
+            sx={{
+              borderColor: '#4285f4',
+              color: '#4285f4',
+              fontWeight: 600,
+              fontSize: '0.75rem',
+              borderRadius: '10px',
+              px: 2,
+              '&:hover': {
+                background: '#e8f0fe',
+                borderColor: '#1a73e8',
+                color: '#1a73e8',
+              },
+            }}
+          >
+            Buka Google Calendar
+          </Button>
+        </Box>
+
+        {/* Calendar Embed */}
+        <Box
+          sx={{
+            borderRadius: 2,
+            overflow: 'hidden',
+            border: '1px solid',
+            borderColor: 'divider',
+            background: '#fafafa',
+          }}
+        >
+          <iframe
+            src="https://calendar.google.com/calendar/embed?src=01ac34223ea216df0a1629d6dbdff2a4b5bd55290becc5c85429c6a220105e50%40group.calendar.google.com&ctz=Asia%2FJakarta&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=0&showCalendars=0&showTz=0&mode=MONTH"
+            style={{
+              border: 'none',
+              width: '100%',
+              height: 520,
+              display: 'block',
+            }}
+            title="Kalender Tim Manhub"
+            loading="lazy"
+            allowFullScreen
+          />
+        </Box>
+      </Paper>
 
       {/* ─── BUDGET CHART LIVE ─── */}
       <Paper
