@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from 'react';
 import {
   Box,
   Typography,
-  Grid,
   Table,
   TableBody,
   TableCell,

@@ -55,7 +55,6 @@ import { formatCurrency } from '../utils/format';
 
 export default function HibahPage() {
   const muiTheme = useMuiTheme();
-  const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'));
   const { isLoggedIn } = useAuth();
 
   const [data, setData] = useState<HibahData[]>([]);
