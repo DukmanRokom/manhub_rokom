@@ -6,8 +6,6 @@ import {
   CardContent,
   CardActionArea,
   Avatar,
-  IconButton,
-  Tooltip,
   Paper,
   Divider,
 } from '@mui/material';

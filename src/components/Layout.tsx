@@ -4,7 +4,6 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 
-const DRAWER_WIDTH = 260;
 
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);

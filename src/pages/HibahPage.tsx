@@ -29,8 +29,6 @@ import {
   Chip,
   alpha,
   Stack,
-  useTheme as useMuiTheme,
-  useMediaQuery,
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 import SearchIcon from '@mui/icons-material/Search';
@@ -54,7 +52,6 @@ import { googleSheetsService, HibahData, MOCK_HIBAH_DATA } from '../services/goo
 import { formatCurrency } from '../utils/format';
 
 export default function HibahPage() {
-  const muiTheme = useMuiTheme();
   const { isLoggedIn } = useAuth();
 
   const [data, setData] = useState<HibahData[]>([]);
