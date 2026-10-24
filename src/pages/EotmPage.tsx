@@ -27,6 +27,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StarIcon from '@mui/icons-material/Star';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
+import SyncIcon from '@mui/icons-material/Sync';
 import { useAuth } from '../contexts/AuthContext';
 import { googleSheetsService, EotmData, convertDriveLink } from '../services/googleSheets';
 
@@ -51,28 +52,30 @@ export default function EotmPage() {
   const [submitting, setSubmitting] = useState(false);
   const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' as 'success' | 'error' });
 
+  // Status whether any synchronization or action is currently in progress
+  const isBusy = loading || submitting;
+
   const loadData = async () => {
     setLoading(true);
     try {
-      const result = await googleSheetsService.fetchEotmData();
-      setData(result);
-    } catch (error) {
-      console.error('Error loading EOTM data:', error);
-      setNotification({ open: true, message: 'Gagal memuat data dari Google Sheets', severity: 'error' });
-    } finally {
-      setLoading(false);
-    }
-
-    // Load Voting URL from Config
-    try {
-      const configs = await googleSheetsService.fetchConfigs();
+      const [result, configs] = await Promise.all([
+        googleSheetsService.fetchEotmData(),
+        googleSheetsService.fetchConfigs().catch(err => {
+          console.error('Error loading config:', err);
+          return [];
+        })
+      ]);
+      setData(result || []);
       const voteConfig = configs.find(c => c.key === 'eotm_vote_url');
       if (voteConfig && voteConfig.value) {
         setVoteUrl(voteConfig.value);
         setUrlInput(voteConfig.value);
       }
     } catch (error) {
-      console.error('Error loading config:', error);
+      console.error('Error loading EOTM data:', error);
+      setNotification({ open: true, message: 'Gagal memuat data dari Google Sheets', severity: 'error' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -113,6 +116,7 @@ export default function EotmPage() {
       }
       handleCloseDialog();
       // Delay reload slightly to allow Google Sheets to process
+      setLoading(true);
       setTimeout(loadData, 1000);
     } catch (error) {
       console.error('Error saving EOTM data:', error);
@@ -127,6 +131,7 @@ export default function EotmPage() {
       try {
         await googleSheetsService.deleteEotmRow(id);
         setNotification({ open: true, message: 'Data berhasil dihapus', severity: 'success' });
+        setLoading(true);
         setTimeout(loadData, 1000);
       } catch (error) {
         console.error('Error deleting EOTM data:', error);
@@ -147,6 +152,8 @@ export default function EotmPage() {
       setVoteUrl(urlInput);
       setNotification({ open: true, message: 'URL Voting berhasil diperbarui', severity: 'success' });
       setEditUrlDialogOpen(false);
+      setLoading(true);
+      setTimeout(loadData, 1000);
     } catch (error) {
       console.error('Error saving URL:', error);
       setNotification({ open: true, message: 'Gagal memperbarui URL Voting', severity: 'error' });
@@ -172,7 +179,7 @@ export default function EotmPage() {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
         <Box>
           <Typography variant="h4" sx={{ fontWeight: 800, color: 'primary.main', mb: 1 }}>
             Employee of the Month
@@ -181,27 +188,40 @@ export default function EotmPage() {
             Apresiasi bagi pegawai dengan kinerja dan dedikasi terbaik setiap bulannya.
           </Typography>
         </Box>
-        {isLoggedIn && (
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
-              variant="outlined"
-              href="https://docs.google.com/spreadsheets/d/1FrxJ4ajv90hLhyxRO-sp3m3oXFZJUMElYd7Ax4Suixg/edit?usp=sharing"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{ px: 3, fontWeight: 700 }}
-            >
-              Buka Spreadsheet
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={handleOpenAdd}
-              sx={{ px: 3, fontWeight: 700 }}
-            >
-              Tambah EOTM
-            </Button>
-          </Box>
-        )}
+        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', alignItems: 'center' }}>
+          <Button
+            variant="outlined"
+            startIcon={loading ? <CircularProgress size={16} color="inherit" /> : <SyncIcon />}
+            onClick={loadData}
+            disabled={isBusy}
+            sx={{ px: 2.5, fontWeight: 700, borderRadius: 2 }}
+          >
+            {loading ? 'Menyinkronkan...' : 'Sinkronkan'}
+          </Button>
+          {isLoggedIn && (
+            <>
+              <Button
+                variant="outlined"
+                href="https://docs.google.com/spreadsheets/d/1FrxJ4ajv90hLhyxRO-sp3m3oXFZJUMElYd7Ax4Suixg/edit?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                disabled={isBusy}
+                sx={{ px: 2.5, fontWeight: 700, borderRadius: 2 }}
+              >
+                Buka Spreadsheet
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={loading ? <CircularProgress size={18} color="inherit" /> : <AddIcon />}
+                onClick={handleOpenAdd}
+                disabled={isBusy}
+                sx={{ px: 2.5, fontWeight: 700, borderRadius: 2 }}
+              >
+                Tambah EOTM
+              </Button>
+            </>
+          )}
+        </Box>
       </Box>
 
       {/* Voting Section */}
@@ -251,7 +271,8 @@ export default function EotmPage() {
             href={voteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            startIcon={<HowToVoteIcon />}
+            startIcon={loading ? <CircularProgress size={18} sx={{ color: 'inherit' }} /> : <HowToVoteIcon />}
+            disabled={isBusy}
             sx={{
               background: '#fff',
               color: '#006b63',
@@ -262,38 +283,54 @@ export default function EotmPage() {
               '&:hover': {
                 background: '#e0fcf9',
               },
+              '&.Mui-disabled': {
+                background: 'rgba(255, 255, 255, 0.6)',
+                color: 'rgba(0, 107, 99, 0.5)',
+              },
               flexGrow: 1
             }}
           >
-            Vote di sini!
+            {loading ? 'Menyinkronkan...' : 'Vote di sini!'}
           </Button>
           {isLoggedIn && (
-            <Tooltip title="Edit URL Voting">
-              <IconButton 
-                onClick={handleOpenEditUrl}
-                sx={{ 
-                  background: 'rgba(255,255,255,0.1)', 
-                  color: '#fff',
-                  '&:hover': { background: 'rgba(255,255,255,0.2)' } 
-                }}
-              >
-                <EditIcon />
-              </IconButton>
+            <Tooltip title={isBusy ? "Sedang sinkronisasi data..." : "Edit URL Voting"}>
+              <span>
+                <IconButton 
+                  onClick={handleOpenEditUrl}
+                  disabled={isBusy}
+                  sx={{ 
+                    background: 'rgba(255,255,255,0.1)', 
+                    color: '#fff',
+                    '&:hover': { background: 'rgba(255,255,255,0.2)' },
+                    '&.Mui-disabled': {
+                      color: 'rgba(255,255,255,0.3)',
+                      background: 'rgba(255,255,255,0.05)',
+                    }
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </span>
             </Tooltip>
           )}
         </Box>
       </Paper>
 
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', py: 10, gap: 2 }}>
           <CircularProgress color="primary" />
+          <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+            Menyinkronkan data dengan Google Spreadsheet...
+          </Typography>
         </Box>
       ) : data.length === 0 ? (
         <Paper sx={{ p: 6, textAlign: 'center', borderRadius: 4, background: 'rgba(0,184,172,0.03)', border: '1px dashed', borderColor: 'divider' }}>
           <StarIcon sx={{ fontSize: 60, color: 'divider', mb: 2 }} />
           <Typography variant="h6" color="text.secondary">Belum ada data Employee of the Month</Typography>
           {isLoggedIn && (
-            <Button variant="outlined" sx={{ mt: 2 }} onClick={handleOpenAdd}>Tambah Data Pertama</Button>
+            <Button variant="outlined" sx={{ mt: 2 }} onClick={handleOpenAdd} disabled={isBusy}>
+              Tambah Data Pertama
+            </Button>
           )}
         </Paper>
       ) : (
@@ -373,22 +410,28 @@ export default function EotmPage() {
                       }}
                     >
                       <Tooltip title="Edit">
-                        <IconButton 
-                          size="small" 
-                          sx={{ background: '#fff', '&:hover': { background: '#f5f5f5' } }} 
-                          onClick={() => handleOpenEdit(item)}
-                        >
-                          <EditIcon fontSize="small" color="primary" />
-                        </IconButton>
+                        <span>
+                          <IconButton 
+                            size="small" 
+                            disabled={isBusy}
+                            sx={{ background: '#fff', '&:hover': { background: '#f5f5f5' } }} 
+                            onClick={() => handleOpenEdit(item)}
+                          >
+                            <EditIcon fontSize="small" color="primary" />
+                          </IconButton>
+                        </span>
                       </Tooltip>
                       <Tooltip title="Hapus">
-                        <IconButton 
-                          size="small" 
-                          sx={{ background: '#fff', '&:hover': { background: '#f5f5f5' } }} 
-                          onClick={() => handleDelete(item.id)}
-                        >
-                          <DeleteIcon fontSize="small" color="error" />
-                        </IconButton>
+                        <span>
+                          <IconButton 
+                            size="small" 
+                            disabled={isBusy}
+                            sx={{ background: '#fff', '&:hover': { background: '#f5f5f5' } }} 
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            <DeleteIcon fontSize="small" color="error" />
+                          </IconButton>
+                        </span>
                       </Tooltip>
                     </Box>
                   )}
@@ -412,6 +455,7 @@ export default function EotmPage() {
         <Fab 
           color="primary" 
           aria-label="add" 
+          disabled={isBusy}
           sx={{ position: 'fixed', bottom: 32, right: 32, display: { md: 'none' } }}
           onClick={handleOpenAdd}
         >
@@ -478,11 +522,11 @@ export default function EotmPage() {
           </Grid>
         </DialogContent>
         <DialogActions sx={{ p: 3 }}>
-          <Button onClick={handleCloseDialog} color="inherit">Batal</Button>
+          <Button onClick={handleCloseDialog} color="inherit" disabled={isBusy}>Batal</Button>
           <Button 
             onClick={handleSubmit} 
             variant="contained" 
-            disabled={submitting || !formData.nama || !formData.periode}
+            disabled={isBusy || !formData.nama || !formData.periode}
             startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : null}
             sx={{ px: 4, fontWeight: 700 }}
           >
@@ -522,11 +566,12 @@ export default function EotmPage() {
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 3 }}>
-          <Button onClick={() => setEditUrlDialogOpen(false)} color="inherit">Batal</Button>
+          <Button onClick={() => setEditUrlDialogOpen(false)} color="inherit" disabled={isBusy}>Batal</Button>
           <Button 
             onClick={handleSaveUrl} 
             variant="contained" 
-            disabled={submitting || !urlInput}
+            disabled={isBusy || !urlInput}
+            startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : null}
             sx={{ px: 4, fontWeight: 700 }}
           >
             {submitting ? 'Menyimpan...' : 'Simpan URL'}
