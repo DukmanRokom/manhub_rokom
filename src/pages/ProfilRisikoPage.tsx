@@ -29,6 +29,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { googleSheetsService, RiskData } from '../services/googleSheets';
 import { useAuth } from '../contexts/AuthContext';
+import TetrisLoading from '../components/TetrisLoading';
 
 export default function ProfilRisikoPage() {
   const { isLoggedIn } = useAuth();
@@ -346,8 +347,11 @@ export default function ProfilRisikoPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={7} align="center" sx={{ py: 8 }}>
-                  <CircularProgress />
+                <TableCell colSpan={7} align="center" sx={{ py: 6, border: 0 }}>
+                  <TetrisLoading
+                    title="Sinkronisasi Profil Risiko..."
+                    subtitle="Memuat matriks analisis risiko & rencana tindak lanjut dari Google Spreadsheet"
+                  />
                 </TableCell>
               </TableRow>
             ) : paginated.length === 0 ? (

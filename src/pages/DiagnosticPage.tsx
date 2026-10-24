@@ -12,6 +12,7 @@ import {
   Avatar,
 } from '@mui/material';
 import { convertDriveLink } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 export default function DiagnosticPage() {
   const [url, setUrl] = useState('https://script.google.com/macros/s/AKfycbwfCmI6l5iNIYGew6VkzLwRDUDvPdVBQuY7zebXr8h_xsMSeRTupK7kRC-kuWY0mUixQg/exec');
@@ -101,10 +102,27 @@ export default function DiagnosticPage() {
       </Paper>
 
       {loading && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-          <CircularProgress />
+        <Box sx={{ my: 4 }}>
+          <TetrisLoading
+            title="Menguji Sinkronisasi Apps Script..."
+            subtitle="Menghubungkan ke Google Apps Script API Biro Kominfo"
+          />
         </Box>
       )}
+
+      {/* Tetris Loading Animation Showcase Section */}
+      <Paper sx={{ p: 4, mb: 4, borderRadius: 4, border: '1px solid #ccfbf1', background: '#f0fdfa' }}>
+        <Typography variant="h6" sx={{ fontWeight: 800, color: '#0f766e', mb: 1 }}>
+          Preview: Animasi Loading Tetris (Varian 2: Corporate Gov-Tech)
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3 }}>
+          Animasi resmi yang digunakan saat sistem sedang melakukan sinkronisasi data dari Google Sheets / Google Drive.
+        </Typography>
+        <TetrisLoading
+          title="Sinkronisasi Database..."
+          subtitle="Menyelaraskan data lembar kerja dengan Google Sheets Biro Kominfo"
+        />
+      </Paper>
 
       {error && (
         <Alert severity="error" sx={{ mb: 4 }}>

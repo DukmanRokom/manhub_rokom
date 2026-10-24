@@ -30,6 +30,7 @@ import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import SyncIcon from '@mui/icons-material/Sync';
 import { useAuth } from '../contexts/AuthContext';
 import { googleSheetsService, EotmData, convertDriveLink } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 export default function EotmPage() {
   const { isLoggedIn } = useAuth();
@@ -317,12 +318,10 @@ export default function EotmPage() {
       </Paper>
 
       {loading ? (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', py: 10, gap: 2 }}>
-          <CircularProgress color="primary" />
-          <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-            Menyinkronkan data dengan Google Spreadsheet...
-          </Typography>
-        </Box>
+        <TetrisLoading
+          title="Menyinkronkan Data EOTM..."
+          subtitle="Menghubungkan ke Google Spreadsheet & memuat data nominasi Employee of the Month"
+        />
       ) : data.length === 0 ? (
         <Paper sx={{ p: 6, textAlign: 'center', borderRadius: 4, background: 'rgba(0,184,172,0.03)', border: '1px dashed', borderColor: 'divider' }}>
           <StarIcon sx={{ fontSize: 60, color: 'divider', mb: 2 }} />

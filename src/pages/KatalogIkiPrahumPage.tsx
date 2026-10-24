@@ -28,6 +28,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { googleSheetsService, PrahumData } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 export default function KatalogIkiPrahumPage() {
   const [data, setData] = useState<PrahumData[]>([]);
@@ -372,11 +373,11 @@ export default function KatalogIkiPrahumPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={7} align="center" sx={{ py: 12 }}>
-                  <CircularProgress sx={{ color: accentColor }} />
-                  <Typography sx={{ mt: 2, color: 'text.secondary' }}>
-                    Memuat data katalog…
-                  </Typography>
+                <TableCell colSpan={7} align="center" sx={{ py: 6, border: 0 }}>
+                  <TetrisLoading
+                    title="Sinkronisasi Katalog IKI PRAHUM..."
+                    subtitle="Memuat butir kegiatan & eviden pranata humas dari Google Spreadsheet"
+                  />
                 </TableCell>
               </TableRow>
             ) : paginatedData.length === 0 ? (

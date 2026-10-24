@@ -28,6 +28,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GroupsIcon from '@mui/icons-material/Groups';
 import SendIcon from '@mui/icons-material/Send';
 import { googleSheetsService, RoomBooking } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 const RUANGAN_LIST = [
   { id: 'ruang_rapat_A', name: 'Ruang Rapat A', capacity: '10 Orang', color: '#1a73e8' },
@@ -364,7 +365,11 @@ export default function RuangRapatPage() {
         </Typography>
 
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}><CircularProgress /></Box>
+          <TetrisLoading
+            size="sm"
+            title="Sinkronisasi Jadwal Rapat..."
+            subtitle="Memeriksa ketersediaan ruangan hari ini"
+          />
         ) : todayBookings.length === 0 ? (
           <Paper sx={{ p: 4, textAlign: 'center', borderRadius: 4, backgroundColor: '#f8fafc', border: '1px dashed #cbd5e1' }}>
             <Typography sx={{ color: 'text.secondary' }}>Tidak ada jadwal rapat untuk hari ini.</Typography>
@@ -409,7 +414,15 @@ export default function RuangRapatPage() {
             </TableHead>
             <TableBody>
               {loading ? (
-                <TableRow><TableCell colSpan={4} align="center"><CircularProgress size={24} /></TableCell></TableRow>
+                <TableRow>
+                  <TableCell colSpan={4} align="center" sx={{ py: 4, border: 0 }}>
+                    <TetrisLoading
+                      size="sm"
+                      title="Sinkronisasi Riwayat Peminjaman..."
+                      subtitle="Memuat 10 peminjaman ruang rapat terkini"
+                    />
+                  </TableCell>
+                </TableRow>
               ) : bookings.length === 0 ? (
                 <TableRow><TableCell colSpan={4} align="center">Belum ada data peminjaman.</TableCell></TableRow>
               ) : (

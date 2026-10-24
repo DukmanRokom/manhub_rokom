@@ -62,6 +62,7 @@ import {
 import { formatCurrency } from '../utils/format';
 import bannerPeople from '../assets/banner_people.png';
 import bannerPeople2 from '../assets/banner_people 2.png';
+import TetrisLoading from '../components/TetrisLoading';
 
 const serviceCards = [
   {
@@ -841,9 +842,10 @@ export default function Dashboard() {
         </Box>
 
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
-            <CircularProgress color="primary" />
-          </Box>
+          <TetrisLoading
+            title="Sinkronisasi Realisasi & POK..."
+            subtitle="Menyinkronkan data grafik anggaran dan belanja modal dengan Google Sheets"
+          />
         ) : (
           <>
             <Box sx={{ height: Math.max(400, data.length * 100), width: '100%', mb: 4 }}>

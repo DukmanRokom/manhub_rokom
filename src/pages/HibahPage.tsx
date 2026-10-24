@@ -33,6 +33,7 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import SearchIcon from '@mui/icons-material/Search';
 import SyncIcon from '@mui/icons-material/Sync';
+import TetrisLoading from '../components/TetrisLoading';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -748,11 +749,11 @@ export default function HibahPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={11} align="center" sx={{ py: 12 }}>
-                  <CircularProgress color="primary" />
-                  <Typography sx={{ mt: 2, color: 'text.secondary', fontWeight: 500 }}>
-                    Mengunduh data anggaran hibah...
-                  </Typography>
+                <TableCell colSpan={11} align="center" sx={{ py: 6, border: 0 }}>
+                  <TetrisLoading
+                    title="Sinkronisasi Data Hibah..."
+                    subtitle="Mengunduh data anggaran hibah dan realisasi mitra dari Google Sheets"
+                  />
                 </TableCell>
               </TableRow>
             ) : paginatedData.length === 0 ? (

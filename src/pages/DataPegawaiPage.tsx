@@ -18,6 +18,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import BusinessIcon from '@mui/icons-material/Business';
 import PersonIcon from '@mui/icons-material/Person';
 import { googleSheetsService, EmployeeData } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 export default function DataPegawaiPage() {
   const [employees, setEmployees] = useState<EmployeeData[]>([]);
@@ -124,10 +125,10 @@ export default function DataPegawaiPage() {
       </Box>
 
       {loading ? (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 10 }}>
-          <CircularProgress />
-          <Typography sx={{ mt: 2, color: 'text.secondary' }}>Memuat data pegawai...</Typography>
-        </Box>
+        <TetrisLoading
+          title="Sinkronisasi Data Pegawai..."
+          subtitle="Memuat profil dan penugasan ASN/PPPK Biro Kominfo dari Google Spreadsheet"
+        />
       ) : (
         <Box>
           {Object.keys(groupedEmployees).length === 0 ? (

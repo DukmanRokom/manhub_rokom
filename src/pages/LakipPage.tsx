@@ -28,6 +28,7 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useAuth } from '../contexts/AuthContext';
 import { googleSheetsService, LakipData, convertDriveLink } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 export default function LakipPage() {
   const { isLoggedIn } = useAuth();
@@ -138,9 +139,10 @@ export default function LakipPage() {
       </Box>
 
       {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
-          <CircularProgress color="primary" />
-        </Box>
+        <TetrisLoading
+          title="Sinkronisasi Dokumen LAKIP..."
+          subtitle="Memuat laporan akuntabilitas kinerja instansi pemerintah dari Google Drive"
+        />
       ) : data.length === 0 ? (
         <Paper sx={{ p: 6, textAlign: 'center', borderRadius: 4, background: 'rgba(0,184,172,0.03)', border: '1px dashed', borderColor: 'divider' }}>
           <PictureAsPdfIcon sx={{ fontSize: 60, color: 'divider', mb: 2 }} />

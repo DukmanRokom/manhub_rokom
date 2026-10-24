@@ -27,6 +27,7 @@ import StorageIcon from '@mui/icons-material/Storage';
 import LaunchIcon from '@mui/icons-material/Launch';
 import { useState, useEffect, useMemo } from 'react';
 import { attendanceService, AttendanceFile } from '../services/attendance';
+import TetrisLoading from '../components/TetrisLoading';
 
 // Sub-component for File Card
 function FileCard({ file, isMaster = false }: { file: AttendanceFile, isMaster?: boolean }) {
@@ -385,9 +386,10 @@ export default function RekapAbsensiPage() {
       </Grid>
 
       {loading ? (
-        <Box sx={{ textAlign: 'center', py: 10 }}>
-          <Typography color="text.secondary">Menyelaraskan data...</Typography>
-        </Box>
+        <TetrisLoading
+          title="Menyelaraskan Berkas Presensi..."
+          subtitle="Mengunduh data dan struktur folder absensi langsung dari Google Drive Biro Kominfo"
+        />
       ) : (
         Object.entries(groupedFiles).map(([year, { utama, months }]) => (
           <Box key={year} sx={{ mb: 10 }}>

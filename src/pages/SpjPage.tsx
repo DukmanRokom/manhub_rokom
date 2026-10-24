@@ -22,6 +22,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { googleSheetsService, SpjData } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 export default function SpjPage() {
   const [data, setData] = useState<SpjData[]>([]);
@@ -146,9 +147,11 @@ export default function SpjPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 10 }}>
-                  <CircularProgress color="primary" />
-                  <Typography sx={{ mt: 2, color: 'text.secondary' }}>Memuat data SPJ...</Typography>
+                <TableCell colSpan={6} align="center" sx={{ py: 6, border: 0 }}>
+                  <TetrisLoading
+                    title="Sinkronisasi Berkas SPJ..."
+                    subtitle="Menyelaraskan data status berkas pertanggungjawaban dari Google Sheets"
+                  />
                 </TableCell>
               </TableRow>
             ) : paginatedData.length === 0 ? (

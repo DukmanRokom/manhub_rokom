@@ -28,6 +28,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { googleSheetsService, PustakawanData } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 export default function KatalogIkiPustakawanPage() {
   const [data, setData] = useState<PustakawanData[]>([]);
@@ -370,11 +371,11 @@ export default function KatalogIkiPustakawanPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 12 }}>
-                  <CircularProgress sx={{ color: accentColor }} />
-                  <Typography sx={{ mt: 2, color: 'text.secondary' }}>
-                    Memuat data katalog…
-                  </Typography>
+                <TableCell colSpan={6} align="center" sx={{ py: 6, border: 0 }}>
+                  <TetrisLoading
+                    title="Sinkronisasi Katalog IKI PUSTAKAWAN..."
+                    subtitle="Memuat butir kegiatan & eviden pustakawan dari Google Spreadsheet"
+                  />
                 </TableCell>
               </TableRow>
             ) : paginatedData.length === 0 ? (

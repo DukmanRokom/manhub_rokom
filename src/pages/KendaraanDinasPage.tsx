@@ -30,6 +30,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import SendIcon from '@mui/icons-material/Send';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { googleSheetsService, VehicleRequest } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 const NAMA_PEMOHON = [
   'ABDUL SURYADI', 'ACHMAD SYAUKI', 'AJI MUHAWARMAN, ST, MKM', 'ALDI RAHMANDA PUTRA',
@@ -396,9 +397,12 @@ export default function KendaraanDinasPage() {
             <TableBody>
               {fetching && requests.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
-                    <CircularProgress size={24} />
-                    <Typography sx={{ mt: 1, color: 'text.secondary', fontSize: '0.875rem' }}>Memuat data...</Typography>
+                  <TableCell colSpan={5} align="center" sx={{ py: 4, border: 0 }}>
+                    <TetrisLoading
+                      size="sm"
+                      title="Sinkronisasi Permohonan Kendaraan..."
+                      subtitle="Memuat riwayat peminjaman kendaraan dinas"
+                    />
                   </TableCell>
                 </TableRow>
               ) : requests.length === 0 ? (

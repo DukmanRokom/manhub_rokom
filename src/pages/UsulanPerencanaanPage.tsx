@@ -15,6 +15,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import LaunchIcon from '@mui/icons-material/Launch';
 import { googleSheetsService, PerencanaanData } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 export default function UsulanPerencanaanPage() {
   const [data, setData] = useState<PerencanaanData[]>([]);
@@ -61,10 +62,10 @@ export default function UsulanPerencanaanPage() {
       </Box>
 
       {loading ? (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 10 }}>
-          <CircularProgress color="primary" />
-          <Typography sx={{ mt: 2, color: 'text.secondary' }}>Memuat data perencanaan...</Typography>
-        </Box>
+        <TetrisLoading
+          title="Sinkronisasi Usulan Perencanaan..."
+          subtitle="Memuat data usulan perencanaan anggaran dari Google Spreadsheet"
+        />
       ) : data.length === 0 ? (
         <Box sx={{ textAlign: 'center', py: 10, bgcolor: '#f8fafc', borderRadius: 4 }}>
           <Typography color="text.secondary">

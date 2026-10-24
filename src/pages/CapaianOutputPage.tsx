@@ -21,6 +21,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SyncIcon from '@mui/icons-material/Sync';
 import { googleSheetsService, CapaianOutputData } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 const MONTHS = [
   { id: 'jan', label: 'Januari' },
@@ -195,9 +196,11 @@ export default function CapaianOutputPage() {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={MONTHS.length + 5} align="center" sx={{ py: 10 }}>
-                  <CircularProgress size={30} sx={{ color: '#00b8ac' }} />
-                  <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>Sedang menyinkronkan data...</Typography>
+                <TableCell colSpan={MONTHS.length + 5} align="center" sx={{ py: 6, border: 0 }}>
+                  <TetrisLoading
+                    title="Sinkronisasi Capaian Output..."
+                    subtitle="Menyelaraskan indikator kinerja bulanan dengan Google Spreadsheet"
+                  />
                 </TableCell>
               </TableRow>
             ) : filteredData.length === 0 ? (

@@ -29,6 +29,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { googleSheetsService, AtkMasterData, AtkRequest, AtkRequestItem } from '../services/googleSheets';
+import TetrisLoading from '../components/TetrisLoading';
 
 const NAMA_PEMOHON = [
   'ABDUL SURYADI', 'ACHMAD SYAUKI', 'AJI MUHAWARMAN, ST, MKM', 'ALDI RAHMANDA PUTRA',
@@ -375,7 +376,15 @@ export default function AtkPage() {
               </TableHead>
               <TableBody>
                 {loading ? (
-                  <TableRow><TableCell colSpan={4} align="center" sx={{ py: 4 }}><CircularProgress size={24} /></TableCell></TableRow>
+                  <TableRow>
+                    <TableCell colSpan={4} align="center" sx={{ py: 4, border: 0 }}>
+                      <TetrisLoading
+                        size="sm"
+                        title="Sinkronisasi Permintaan ATK..."
+                        subtitle="Memuat riwayat permohonan alat tulis kantor"
+                      />
+                    </TableCell>
+                  </TableRow>
                 ) : requests.length === 0 ? (
                   <TableRow><TableCell colSpan={4} align="center" sx={{ py: 4 }}>Belum ada riwayat.</TableCell></TableRow>
                 ) : (

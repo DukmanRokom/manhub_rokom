@@ -23,6 +23,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import SyncIcon from '@mui/icons-material/Sync';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import TetrisLoading from '../components/TetrisLoading';
 import {
   BarChart,
   Bar,
@@ -155,11 +156,13 @@ export default function RealisasiAnggaranPage() {
       )}
 
       {/* Visualization Card */}
-      <Card sx={{ mb: 4, borderRadius: 3, backgroundColor: '#f0fafa', boxShadow: 'none', border: '1px solid #60c0d0', position: 'relative' }}>
+      <Card sx={{ mb: 4, borderRadius: 3, backgroundColor: '#f0fafa', boxShadow: 'none', border: '1px solid #60c0d0', position: 'relative', overflow: 'hidden' }}>
         {loading && (
-          <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(240, 250, 250, 0.7)', zIndex: 2 }}>
-            <CircularProgress color="primary" />
-          </Box>
+          <TetrisLoading
+            overlay
+            title="Sinkronisasi Realisasi Anggaran..."
+            subtitle="Menghitung serapan anggaran per kegiatan dari Google Spreadsheet"
+          />
         )}
         <CardContent sx={{ p: 4 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 4 }}>
